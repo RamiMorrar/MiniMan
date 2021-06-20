@@ -17,13 +17,13 @@ namespace Chapter6Game
         OrthographicCamera camera;
         
         InputManager Input;
-
+        GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
+        GamePadState state;
         // Put Camera at X: 745 when at end of level
         public Vector2 CameraPos;
        public Player player = new Player();
         Terrain terrain = new Terrain();
-        Coins coin, coin1, coin2;
-       
+        Coins coin;
         bool flip = false;
 
         bool paused = false;
@@ -124,8 +124,11 @@ namespace Chapter6Game
            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
-           
+
+
+
+            #region Pausing
+
             if (!paused)
             {
                 camera.LookAt(CameraPos);
@@ -138,8 +141,11 @@ namespace Chapter6Game
             {
                 paused = false;
             }
-  
-                if (Input.IsPressed(Keys.W) && !player.hasjumped )
+
+            #endregion
+
+            #region Keyboard Input
+            if (Input.IsPressed(Keys.W ) && !player.hasjumped )
                 {
                     player.anim = animations[2];
 
@@ -196,7 +202,7 @@ namespace Chapter6Game
                 }
 
             HandleAnimationCollsions();
-
+            #endregion
             if (!paused)
             {
                 
@@ -206,7 +212,78 @@ namespace Chapter6Game
             }
 
             DebugPlayer();
-            
+            #region Controller Input
+            if (capabilities.IsConnected)
+            {
+
+                GamePadState state = GamePad.GetState(PlayerIndex.One);
+                if (state.IsButtonDown(Buttons.B))
+                {
+                    AnimState = 3;
+
+                }
+                if (state.IsButtonDown(Buttons.Y))
+                {
+
+                    AnimState = 3;
+
+                }
+                if (state.IsButtonDown(Buttons.A) && !player.hasjumped)
+                {
+                    player.anim = animations[2];
+
+                    //    Debug.WriteLine(AnimState);
+
+                    player.position.Y -= 14;
+                    player.gravity = -7.5f;
+                    player.hasjumped = true;
+                    //    Debug.WriteLine(player.position);
+                }
+                if (state.IsButtonDown(Buttons.X) && !player.hasjumped)
+                {
+                    player.anim = animations[2];
+
+                    //    Debug.WriteLine(AnimState);
+
+                    player.position.Y -= 14;
+                    player.gravity = -7.5f;
+                    player.hasjumped = true;
+                    //    Debug.WriteLine(player.position);
+                }
+
+
+
+                if (capabilities.HasLeftXThumbStick)
+                {
+                  
+                    //Moves player with the Thumbstick
+                    if(state.ThumbSticks.Left.X < -0.5f)
+                    {
+                        flip = true;
+                        AnimState = 1;
+                        player.position.X -= player.speed;
+                        CameraPos.X -= player.speed;
+                        hearts.Positions[0].X -= player.speed;
+                        hearts.Positions[1].X -= player.speed;
+                        hearts.Positions[2].X -= player.speed;
+                    }
+
+                    if (state.ThumbSticks.Left.X > .5f)
+                    {
+                        flip = false;
+                        AnimState = 1;
+                        player.position.X += player.speed;
+                        CameraPos.X += player.speed;
+                        hearts.Positions[0].X += player.speed;
+                        hearts.Positions[1].X += player.speed;
+                        hearts.Positions[2].X += player.speed;
+                    }
+                }
+                Debug.WriteLine(capabilities.IsConnected);
+            }
+
+            #endregion
+
             base.Update(gameTime);
         }
         #region debug
