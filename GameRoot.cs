@@ -54,9 +54,7 @@ namespace Chapter6Game
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            
             coin = new Coins(this );
-           
         }
 
         protected override void Initialize()
@@ -211,29 +209,22 @@ namespace Chapter6Game
                 player.Update(gameTime);
             }
 
-            DebugPlayer();
+           
             #region Controller Input
             if (capabilities.IsConnected)
             {
-
                 GamePadState state = GamePad.GetState(PlayerIndex.One);
                 if (state.IsButtonDown(Buttons.B))
                 {
                     AnimState = 3;
-
                 }
                 if (state.IsButtonDown(Buttons.Y))
                 {
-
                     AnimState = 3;
-
                 }
                 if (state.IsButtonDown(Buttons.A) && !player.hasjumped)
                 {
                     player.anim = animations[2];
-
-                   
-
                     player.position.Y -= 14;
                     player.gravity = -7.5f;
                     player.hasjumped = true;
@@ -241,22 +232,39 @@ namespace Chapter6Game
                 }
                 if (state.IsButtonDown(Buttons.X) && !player.hasjumped)
                 {
-                    player.anim = animations[2];
-
-                  
+                    player.anim = animations[2];        
                     player.position.Y -= 14;
                     player.gravity = -7.5f;
                     player.hasjumped = true;
                    
                 }
 
+                if (state.IsButtonDown(Buttons.DPadLeft) && !player.isCollidingside)
+                {
+                    flip = true;
+                    AnimState = 1;
+                    player.position.X -= player.speed;
+                    CameraPos.X -= player.speed;
+                    hearts.Positions[0].X -= player.speed;
+                    hearts.Positions[1].X -= player.speed;
+                    hearts.Positions[2].X -= player.speed;
+                }
+                if (state.IsButtonDown(Buttons.DPadRight) && !player.isCollidingside)
+                {
+                    flip = false;
+                    AnimState = 1;
+                    player.position.X += player.speed;
+                    CameraPos.X += player.speed;
+                    hearts.Positions[0].X += player.speed;
+                    hearts.Positions[1].X += player.speed;
+                    hearts.Positions[2].X += player.speed;
+                }
 
 
                 if (capabilities.HasLeftXThumbStick)
                 {
-                  
                     //Moves player with the Thumbstick
-                    if(state.ThumbSticks.Left.X < -0.5f)
+                    if(state.ThumbSticks.Left.X < -0.5f && !player.isCollidingside)
                     {
                         flip = true;
                         AnimState = 1;
@@ -266,8 +274,7 @@ namespace Chapter6Game
                         hearts.Positions[1].X -= player.speed;
                         hearts.Positions[2].X -= player.speed;
                     }
-
-                    if (state.ThumbSticks.Left.X > .5f)
+                    if (state.ThumbSticks.Left.X > .5f && !player.isCollidingside)
                     {
                         flip = false;
                         AnimState = 1;
@@ -278,7 +285,6 @@ namespace Chapter6Game
                         hearts.Positions[2].X += player.speed;
                     }
                 }
-                Debug.WriteLine(capabilities.IsConnected);
             }
 
             #endregion

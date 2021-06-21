@@ -40,7 +40,7 @@ namespace MiniMan.Content.Objects
         {
             if (BoundingCircle.Intersects(player.playerRect))
             {
-               
+                
                 Debug.WriteLine("Circle Collision Found");
             }
         }
