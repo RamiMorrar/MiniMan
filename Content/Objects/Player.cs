@@ -110,7 +110,7 @@ namespace Chapter6Game.Content.Objects
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-             //   Debug.WriteLine("Collision Found");
+             
             }
 
             if (playerRect.Intersects(terrain.collisionRect[8]))
@@ -118,7 +118,7 @@ namespace Chapter6Game.Content.Objects
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-          //      Debug.WriteLine("Collision Found");
+         
             }
 
 
@@ -183,7 +183,8 @@ namespace Chapter6Game.Content.Objects
             // Add death Logic
             if (health <= 0)
             {
-
+                
+                
             }
 
             

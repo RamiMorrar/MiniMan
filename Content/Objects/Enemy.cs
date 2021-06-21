@@ -9,22 +9,18 @@ namespace Chapter6Game.Content.Objects
 {
     public class Enemy
     {
-        // Used to handle enemies currently active
-        //public List<Enemy> enemies = new List<Enemy>();
+        public Player player = new Player();
         public float Gravity = 2;
         public Vector2 Position;
        public bool enemyFlip;
-     public   float health;
-        public SpriteAnimation anim;
-        bool isdead;
+        Terrain terrain = new Terrain();
+      
         // public Player playerFunctions = new Player();
         public Rectangle enemyRect;
         public Enemy()
         {
-            isdead = false;
             
-            
-
+  
         }
 
         public static List<Enemy> enemies = new List<Enemy>();
@@ -32,21 +28,46 @@ namespace Chapter6Game.Content.Objects
         public Enemy(Rectangle rectangle, float Speed)
         {
             this.enemyRect = rectangle;
-            this.speed = Speed;
+            
         }
-
-        
 
         public void Update (GameTime gameTime)
         {
-            
+            Position.Y += Gravity;
+
+            HandleEnemyCollisions();
         }
+
+        public void HandleEnemyCollisions() {
+            if (enemyRect.Intersects(terrain.collisionRect[2]))
+            {
+                Gravity = 0;
+            }
+            if (enemyRect.Intersects(terrain.collisionRect[1]))
+            {
+                Gravity = 0;
+            }
+            if (enemyRect.Intersects(terrain.collisionRect[3]))
+            {
+                Gravity = 0;
+            }
+            if (enemyRect.Intersects(terrain.collisionRect[4]))
+            {
+                Gravity = 0;
+            }
+
+            if (enemyRect.Intersects(terrain.collisionRect[0]))
+            {
+                Gravity = 0;
+            }
+        }
+
     }
 
     public class RedEnemy : Enemy
     {
         public Rectangle topofHead;
-
+        
         public RedEnemy()
         {
             Position = new Vector2(200, 300);
@@ -59,7 +80,7 @@ namespace Chapter6Game.Content.Objects
         }
       public void Update(GameTime gameTime)
         {
-            Position.Y += Gravity;
+           
         }
      
     }
@@ -67,12 +88,12 @@ namespace Chapter6Game.Content.Objects
     public class BlueEnemy: Enemy
     {
         
-        public Rectangle headHorn, Body;
+        public Rectangle Body;
         
         public void Update(GameTime gameTime)
         {
 
-            Position.Y += Gravity;
+           
             // float distance = MathHelper.Distance(playerFunctions.position.X, Position.X);
             //if (distance < 20)
             //{

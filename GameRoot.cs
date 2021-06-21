@@ -37,9 +37,17 @@ namespace Chapter6Game
         ///  Player Sprites and Animation Field
         /// </summary>
         int AnimState;
+        //Player Animation
         private Texture2D idle, Jump, run, Damaged, punch, Fist;
         //coin animations
-        private Texture2D coinIdle, coinSpark; 
+        private Texture2D coinIdle, coinSpark;
+
+        //Red Enemy
+        private Texture2D Redidle, patrol, stomp;
+        //Blue Enemy
+        private Texture2D Bluedle, Bluepatrol, blueHit;
+        // Samurai Boss 
+        private Texture2D Samuraiidle, Slash, samuraiRun,  hit;
        
         public SpriteAnimation[] animations = new SpriteAnimation[5];
         public SpriteAnimation[] coinAnims = new SpriteAnimation[2];
