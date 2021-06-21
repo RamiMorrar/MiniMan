@@ -48,6 +48,7 @@ namespace Chapter6Game.Content.Objects
 
         public void HandleCollisions()
         {
+            #region Terrain Collision
             if (playerRect.Intersects(terrain.collisionRect[0]))
             {
                 gravity = 0;
@@ -147,6 +148,14 @@ namespace Chapter6Game.Content.Objects
             {
                 isCollidingside = true;
             }
+            #endregion
+
+            if (playerRect.Intersects(e.enemyRect))
+            {
+                position.X -= 2;
+                position.Y += 2;
+                health--;
+            }
         }
         public void Update(GameTime gameTime)
         {
@@ -172,7 +181,7 @@ namespace Chapter6Game.Content.Objects
                 position.Y -= 200;
             }
             // Add death Logic
-            if (health < 0)
+            if (health <= 0)
             {
 
             }
