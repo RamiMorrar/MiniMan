@@ -51,8 +51,11 @@ namespace Chapter6Game
        
         public SpriteAnimation[] animations = new SpriteAnimation[5];
         public SpriteAnimation[] coinAnims = new SpriteAnimation[2];
+        public SpriteAnimation[] blueAnimations = new SpriteAnimation[3];
+        public SpriteAnimation[] redAnimations = new SpriteAnimation[3];
+        public SpriteAnimation[] samuraiAnimations = new SpriteAnimation[4];
 
-         UIHearts hearts = new UIHearts();
+        UIHearts hearts = new UIHearts();
         public Effect effect;
 
         
@@ -100,6 +103,8 @@ namespace Chapter6Game
             coinIdle = Content.Load<Texture2D>("Collectibles/Coins");
             coinSpark = Content.Load<Texture2D>("Collectibles/CoinSpark");
 
+
+
             animations[0] = new SpriteAnimation(idle, 4, 8);
             animations[1] = new SpriteAnimation(run, 3, 8);
             animations[2] = new SpriteAnimation(Jump, 2, 1);
@@ -109,6 +114,8 @@ namespace Chapter6Game
             coinAnims[0] = new SpriteAnimation(coinIdle, 4, 8);
             coinAnims[1] = new SpriteAnimation(coinSpark, 4, 7);
             coinAnims[1].IsLooping = false;
+
+            
             
             
             // Sets the default animation to Idle
