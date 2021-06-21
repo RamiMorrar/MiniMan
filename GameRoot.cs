@@ -18,7 +18,7 @@ namespace Chapter6Game
         
         InputManager Input;
         GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
-        GamePadState state;
+       
         // Put Camera at X: 745 when at end of level
         public Vector2 CameraPos;
        public Player player = new Player();
@@ -232,23 +232,22 @@ namespace Chapter6Game
                 {
                     player.anim = animations[2];
 
-                    //    Debug.WriteLine(AnimState);
+                   
 
                     player.position.Y -= 14;
                     player.gravity = -7.5f;
                     player.hasjumped = true;
-                    //    Debug.WriteLine(player.position);
+                    
                 }
                 if (state.IsButtonDown(Buttons.X) && !player.hasjumped)
                 {
                     player.anim = animations[2];
 
-                    //    Debug.WriteLine(AnimState);
-
+                  
                     player.position.Y -= 14;
                     player.gravity = -7.5f;
                     player.hasjumped = true;
-                    //    Debug.WriteLine(player.position);
+                   
                 }
 
 
