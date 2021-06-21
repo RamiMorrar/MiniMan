@@ -11,17 +11,19 @@ namespace Chapter6Game.Content.Objects
     {
         // Used to handle enemies currently active
         //public List<Enemy> enemies = new List<Enemy>();
-
-
-        public bool enemyFlip;
-        public float speed;
+        public float Gravity = 2;
+        public Vector2 Position;
+       public bool enemyFlip;
+     public   float health;
+        public SpriteAnimation anim;
         bool isdead;
         // public Player playerFunctions = new Player();
         public Rectangle enemyRect;
         public Enemy()
         {
             isdead = false;
-
+            
+            
 
         }
 
@@ -43,33 +45,41 @@ namespace Chapter6Game.Content.Objects
 
     public class RedEnemy : Enemy
     {
+        public Rectangle topofHead;
 
-        
-        public Vector2 position;
-        
-      public Rectangle topofHead;
-     
-     public void Initialize()
+        public RedEnemy()
         {
-            enemyRect = new Rectangle((int)position.X, (int)position.Y, 48, 13);
+            Position = new Vector2(200, 300);
+           
         }
-       public void Update()
+        public void Initialize()
         {
             
+            enemyRect = new Rectangle((int)Position.X, (int)Position.Y, 48, 33);
         }
+      public void Update(GameTime gameTime)
+        {
+            Position.Y += Gravity;
+        }
+     
     }
 
     public class BlueEnemy: Enemy
     {
         
-        public Vector2 Position;
-        public Rectangle headHorn;
+        public Rectangle headHorn, Body;
         
-
-      
         public void Update(GameTime gameTime)
         {
-           
+
+            Position.Y += Gravity;
+            // float distance = MathHelper.Distance(playerFunctions.position.X, Position.X);
+            //if (distance < 20)
+            //{
+            //    //add patrol logic
+            //}
+
+
         }
     }
     public class SamuraiBoss: Enemy
