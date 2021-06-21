@@ -115,7 +115,8 @@ namespace Chapter6Game
             coinAnims[1] = new SpriteAnimation(coinSpark, 4, 7);
             coinAnims[1].IsLooping = false;
 
-            
+
+            redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
             
             
             // Sets the default animation to Idle
