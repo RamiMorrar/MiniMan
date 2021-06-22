@@ -9,7 +9,7 @@ namespace Chapter6Game.Content.Objects
 {
     public class Enemy
     {
-        public Player player = new Player();
+         
         public float Gravity = 2;
         public Vector2 Position;
        public bool enemyFlip;

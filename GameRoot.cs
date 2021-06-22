@@ -117,8 +117,9 @@ namespace Chapter6Game
 
 
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
-            
-            
+            redAnimations[1] = new SpriteAnimation(patrol, 6, 2);
+            redAnimations[2] = new SpriteAnimation(stomp, 2, 1);
+            redAnimations[2].IsLooping = false;
             // Sets the default animation to Idle
             player.anim = animations[0];
             coin.anim = coinAnims[0];
