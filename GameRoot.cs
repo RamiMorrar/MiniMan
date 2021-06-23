@@ -30,7 +30,10 @@ namespace Chapter6Game
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        
+        SamuraiBoss samurai = new SamuraiBoss();
+        RedEnemy redEnemy = new RedEnemy();
+        BlueEnemy blueEnemy = new BlueEnemy();
+
        
         private Texture2D background { get; set; }
         /// <summary>
@@ -45,9 +48,9 @@ namespace Chapter6Game
         //Red Enemy
         private Texture2D Redidle, patrol, stomp;
         //Blue Enemy
-        private Texture2D Bluedle, Bluepatrol, blueHit;
+        private Texture2D BlueIdle, Bluepatrol, blueHit;
         // Samurai Boss 
-        private Texture2D Samuraiidle, Slash, samuraiRun,  hit;
+        private Texture2D Samuraiidle, Slash, samuraiRun,  samuraihit;
        
         public SpriteAnimation[] animations = new SpriteAnimation[5];
         public SpriteAnimation[] coinAnims = new SpriteAnimation[2];
@@ -102,8 +105,21 @@ namespace Chapter6Game
 
             coinIdle = Content.Load<Texture2D>("Collectibles/Coins");
             coinSpark = Content.Load<Texture2D>("Collectibles/CoinSpark");
+            // Red Enemy
+            Redidle = Content.Load<Texture2D>("Characters/Enemies/RedIdle");
+            patrol = Content.Load<Texture2D>("Characters/Enemies/RedPatrol");
+           stomp = Content.Load<Texture2D>("Characters/Enemies/RedStomped");
 
+            //Blue Enemy
+            BlueIdle = Content.Load<Texture2D>("Characters/Enemies/BlueIdle");
+            blueHit = Content.Load<Texture2D>("Characters/Enemies/BlueIdle");
+            Bluepatrol = Content.Load<Texture2D>("Characters/Enemies/BluePatrol");
 
+            //Samurai Boss
+            Samuraiidle = Content.Load<Texture2D>("Characters/Enemies/SamuraiIdle");
+            Slash = Content.Load<Texture2D>("Characters/Enemies/SamuraiAttack");
+            samuraiRun = Content.Load<Texture2D>("Character/Enemies/SamuraiRun");
+            samuraihit = Content.Load<Texture2D>("Characters/Enemies/SamuraiDamaged");
 
             animations[0] = new SpriteAnimation(idle, 4, 8);
             animations[1] = new SpriteAnimation(run, 3, 8);
@@ -116,13 +132,21 @@ namespace Chapter6Game
             coinAnims[1].IsLooping = false;
 
 
+            
+            // red enemy Animations
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
             redAnimations[1] = new SpriteAnimation(patrol, 6, 2);
             redAnimations[2] = new SpriteAnimation(stomp, 2, 1);
             redAnimations[2].IsLooping = false;
+
+            // blue Animation
+            blueAnimations[0] = new SpriteAnimation(BlueIdle, 2, 2);
+
             // Sets the default animation to Idle
             player.anim = animations[0];
             coin.anim = coinAnims[0];
+
+            
             
            
             background = Content.Load<Texture2D>("Terrain/Sky");
