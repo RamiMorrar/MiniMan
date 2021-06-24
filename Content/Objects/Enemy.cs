@@ -27,7 +27,7 @@ namespace Chapter6Game.Content.Objects
 
         public Enemy(Rectangle rectangle, float Speed)
         {
-            this.enemyRect = rectangle;
+            enemyRect = rectangle;
             
         }
 

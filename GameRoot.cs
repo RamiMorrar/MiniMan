@@ -118,7 +118,7 @@ namespace Chapter6Game
             //Samurai Boss
             Samuraiidle = Content.Load<Texture2D>("Characters/Enemies/SamuraiIdle");
             Slash = Content.Load<Texture2D>("Characters/Enemies/SamuraiAttack");
-            samuraiRun = Content.Load<Texture2D>("Character/Enemies/SamuraiRun");
+            samuraiRun = Content.Load<Texture2D>("Characters/Enemies/SamuraiRun");
             samuraihit = Content.Load<Texture2D>("Characters/Enemies/SamuraiDamaged");
 
             animations[0] = new SpriteAnimation(idle, 4, 8);
@@ -141,6 +141,15 @@ namespace Chapter6Game
 
             // blue Animation
             blueAnimations[0] = new SpriteAnimation(BlueIdle, 2, 2);
+            blueAnimations[1] = new SpriteAnimation(Bluepatrol, 6, 2);
+            blueAnimations[2] = new SpriteAnimation(blueHit, 2, 1);
+            blueAnimations[2].IsLooping = false;
+
+            // Samurai Animation
+            samuraiAnimations[0] = new SpriteAnimation(Samuraiidle, 3, 8);
+            samuraiAnimations[1] = new SpriteAnimation(samuraiRun, 4, 8);
+            samuraiAnimations[2] = new SpriteAnimation(Slash, 7, 10);
+            samuraiAnimations[3] = new SpriteAnimation(samuraihit, 1, 1);
 
             // Sets the default animation to Idle
             player.anim = animations[0];
