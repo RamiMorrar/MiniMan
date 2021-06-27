@@ -68,7 +68,7 @@ namespace MiniMan.Content.Objects
 
         public void Update()
         {
-            int total = 10;
+            int total = 5;
 
             for (int i = 0; i < total; i++)
             {
@@ -91,28 +91,29 @@ namespace MiniMan.Content.Objects
             Texture2D texture = textures[random.Next(textures.Count)];
             Vector2 position = EmitterLocation;
             Vector2 velocity = new Vector2(
-                                    1f * (float)(random.NextDouble() * 2 - 1),
-                                    1f * (float)(random.NextDouble() * 2 - 1));
+                                    1f * (float)(random.NextDouble() * 1 - 1),
+                                    1f * (float)(random.NextDouble() * 1 - 1));
             float angle = 0;
-            float angularVelocity = 0.1f * (float)(random.NextDouble() * 2 - 1);
+            float angularVelocity = 0.4f * (float)(random.NextDouble() * 1 - 1);
             Color color = new Color(
                         (float)random.NextDouble(),
                         (float)random.NextDouble(),
                         (float)random.NextDouble());
             float size = (float)random.NextDouble();
-            int ttl = 20 + random.Next(40);
+            int ttl = 8 + random.Next(20);
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
+           
             for (int index = 0; index < particles.Count; index++)
             {
                 particles[index].Draw(spriteBatch);
             }
-            spriteBatch.End();
+
+           
         }
 
 
