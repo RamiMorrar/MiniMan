@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System;
+using System.Linq;
 using Chapter6Game.Content;
 using System.Diagnostics;
 using MonoGame.Extended;
-
+using System.Collections.Generic;
 using Chapter6Game.Content.Objects;
 using MonoGame.Extended.ViewportAdapters;
 using MiniMan.Content.Objects;
@@ -15,15 +16,19 @@ namespace Chapter6Game
     public class GameRoot : Game
     {
         OrthographicCamera camera;
-        
+
+
+        ParticleEngine particleEngine;
+
         InputManager Input;
         GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
-       
+
         // Put Camera at X: 745 when at end of level
         public Vector2 CameraPos;
-       public Player player = new Player();
+        public Player player = new Player();
         Terrain terrain = new Terrain();
         Coins coin;
+       
         bool flip = false;
         Enemy enemy = new Enemy();
         bool paused = false;
@@ -34,7 +39,7 @@ namespace Chapter6Game
         RedEnemy redEnemy = new RedEnemy();
         BlueEnemy blueEnemy = new BlueEnemy();
 
-       
+
         private Texture2D background { get; set; }
         /// <summary>
         ///  Player Sprites and Animation Field
@@ -50,8 +55,8 @@ namespace Chapter6Game
         //Blue Enemy
         private Texture2D BlueIdle, Bluepatrol, blueHit;
         // Samurai Boss 
-        private Texture2D Samuraiidle, Slash, samuraiRun,  samuraihit;
-       
+        private Texture2D Samuraiidle, Slash, samuraiRun, samuraihit;
+
         public SpriteAnimation[] animations = new SpriteAnimation[5];
         public SpriteAnimation[] coinAnims = new SpriteAnimation[2];
         public SpriteAnimation[] blueAnimations = new SpriteAnimation[3];
@@ -61,14 +66,14 @@ namespace Chapter6Game
         UIHearts hearts = new UIHearts();
         public Effect effect;
 
-        
+
         public GameRoot()
         {
             Input = new InputManager(this);
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            coin = new Coins(this );
+            coin = new Coins(this);
         }
 
         protected override void Initialize()
@@ -83,33 +88,43 @@ namespace Chapter6Game
             terrain.Initialize();
             hearts.Initialize();
 
-                   
 
-            
+
+
             CameraPos = player.position -= new Vector2(-35, 50);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-                       
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
- 
+
+
+            #region Player Sprites
             idle = Content.Load<Texture2D>("Characters/Player/PlayerIdle");
             run = Content.Load<Texture2D>("Characters/Player/PlayerRun");
             punch = Content.Load<Texture2D>("Characters/Player/PlayerPunch");
             Fist = Content.Load<Texture2D>("Characters/Player/PlayerFist");
             Jump = Content.Load<Texture2D>("Characters/Player/PlayerJump");
             Damaged = Content.Load<Texture2D>("Characters/Player/PlayerDamaged");
+            #endregion
+
+            List<Texture2D> textures = new List<Texture2D>();
+            textures.Add(Content.Load<Texture2D>("Particles/diamond"));
+            textures.Add(Content.Load<Texture2D>("Particles/star"));
+            particleEngine = new ParticleEngine(textures, player.position);
 
             coinIdle = Content.Load<Texture2D>("Collectibles/Coins");
             coinSpark = Content.Load<Texture2D>("Collectibles/CoinSpark");
             // Red Enemy
             Redidle = Content.Load<Texture2D>("Characters/Enemies/RedIdle");
             patrol = Content.Load<Texture2D>("Characters/Enemies/RedPatrol");
-           stomp = Content.Load<Texture2D>("Characters/Enemies/RedStomped");
+            stomp = Content.Load<Texture2D>("Characters/Enemies/RedStomped");
 
+
+            #region Enemy Sprites
             //Blue Enemy
             BlueIdle = Content.Load<Texture2D>("Characters/Enemies/BlueIdle");
             blueHit = Content.Load<Texture2D>("Characters/Enemies/BlueIdle");
@@ -130,9 +145,9 @@ namespace Chapter6Game
             coinAnims[0] = new SpriteAnimation(coinIdle, 4, 8);
             coinAnims[1] = new SpriteAnimation(coinSpark, 4, 7);
             coinAnims[1].IsLooping = false;
+            #endregion
 
 
-            
             // red enemy Animations
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
             redAnimations[1] = new SpriteAnimation(patrol, 6, 2);
@@ -155,25 +170,25 @@ namespace Chapter6Game
             player.anim = animations[0];
             coin.anim = coinAnims[0];
 
-            
-            
-           
+
+
+
             background = Content.Load<Texture2D>("Terrain/Sky");
             terrain.LoadContent(Content);
             hearts.LoadContent(Content);
 
             effect = Content.Load<Effect>("PixelShader");
-         
+
         }
 
-      
+
         protected override void Update(GameTime gameTime)
         {
-           
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
+           
 
             #region Pausing
 
@@ -192,18 +207,17 @@ namespace Chapter6Game
 
             #endregion
 
+           
             #region Keyboard Input
             if (Input.IsPressed(Keys.W) && !player.hasjumped)
-                {
-                
-                    player.position.Y -= 14;
-                    player.gravity = -7.5f;
-                    player.hasjumped = true;
+             {
+               
+                player.position.Y -= 14;
+                player.gravity = -7.5f;
+                player.hasjumped = true;
                 Debug.WriteLine(AnimState);
             }
-
-   
-
+            
 
             if (Input.IsPressed(Keys.K) )
             {
@@ -212,11 +226,11 @@ namespace Chapter6Game
             else
             {
                 AnimState = 0;
-             
             }
 
             if (Input.IsPressed(Keys.A) && !player.isCollidingside)
             {
+               
                     flip = true;
                     AnimState = 1;
                     player.position.X -= player.speed;
@@ -228,13 +242,14 @@ namespace Chapter6Game
             }
             else
             {
+                
                 player.anim = animations[0];
             }
             
                 if (Input.IsPressed(Keys.D) && !player.isCollidingside)
                 {
-
-                    flip = false;
+                
+                  flip = false;
                     CameraPos.X += player.speed;
                     player.position.X = player.position.X + player.speed;
                 hearts.Positions[0].X += player.speed ;
@@ -242,6 +257,10 @@ namespace Chapter6Game
                 hearts.Positions[2].X += player.speed ;
                 AnimState = 1;
                 }
+            else
+            {
+              
+            }
 
             HandleAnimationCollsions();
             #endregion
@@ -253,7 +272,10 @@ namespace Chapter6Game
                 player.Update(gameTime);
             }
 
-           
+
+            particleEngine.EmitterLocation = new Vector2(player.position.X+20, player.position.Y+30);
+            particleEngine.Update();
+
             #region Controller Input
             if (capabilities.IsConnected)
             {
@@ -435,6 +457,7 @@ namespace Chapter6Game
             var transFormMatrix = camera.GetViewMatrix();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: transFormMatrix);
+           
             #region Textures and Shader
             effect.CurrentTechnique.Passes[0].Apply();
             _spriteBatch.Draw(background, new Vector2(-1413, 50), Color.White);
@@ -447,11 +470,15 @@ namespace Chapter6Game
 
             terrain.Draw(_spriteBatch);
 
+           
             
-                if (flip)
+                particleEngine.Draw(_spriteBatch);
+            
+            if (flip)
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.FlipHorizontally);
-                }
+                
+            }
                 else
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.None);
