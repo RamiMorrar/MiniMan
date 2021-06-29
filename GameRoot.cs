@@ -116,6 +116,11 @@ namespace Chapter6Game
             textures.Add(Content.Load<Texture2D>("Particles/star"));
             particleEngine = new ParticleEngine(textures, player.position);
 
+            List<Texture2D> textures = new List<Texture2D>();
+            textures.Add(Content.Load<Texture2D>("Particles/diamond"));
+            textures.Add(Content.Load<Texture2D>("Particles/star"));
+            particleEngine = new ParticleEngine(textures, player.position);
+
             coinIdle = Content.Load<Texture2D>("Collectibles/Coins");
             coinSpark = Content.Load<Texture2D>("Collectibles/CoinSpark");
             // Red Enemy
