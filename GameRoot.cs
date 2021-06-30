@@ -536,6 +536,13 @@ namespace Chapter6Game
                 
                 _spriteBatch.DrawString(font, gameOver, CameraPos, Color.Black);
             }
+
+           if (samurai.health <= 0)
+            {
+                string conText = "Congrats, you won!";
+
+                _spriteBatch.DrawString(font, conText, CameraPos, Color.Black);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
