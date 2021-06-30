@@ -100,7 +100,7 @@ namespace MiniMan.Content.Objects
                         (float)random.NextDouble(),
                         (float)random.NextDouble());
             float size = (float)random.NextDouble();
-            int ttl = 20 + random.Next(40);
+            int ttl = 8 + random.Next(5);
 
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }

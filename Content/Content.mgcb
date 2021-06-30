@@ -242,6 +242,13 @@
 /processorParam:TextureFormat=Color
 /build:Collectibles/CoinSpark.png
 
+#begin Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font.spritefont
+
 #begin Particles/diamond.png
 /importer:TextureImporter
 /processor:TextureProcessor

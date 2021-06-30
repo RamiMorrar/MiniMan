@@ -15,10 +15,15 @@ namespace Chapter6Game
 {
     public class GameRoot : Game
     {
+        bool gameStarted = false;
+
         OrthographicCamera camera;
 
+        bool playerisDead = false;
 
-        ParticleEngine particleEngine;
+
+        ParticleEngine particleEngine; // Sets a class variable
+
 
         InputManager Input;
         GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
@@ -28,7 +33,9 @@ namespace Chapter6Game
         public Player player = new Player();
         Terrain terrain = new Terrain();
         Coins coin;
-       
+
+        public SpriteFont font;
+
         bool flip = false;
         Enemy enemy = new Enemy();
         bool paused = false;
@@ -41,6 +48,7 @@ namespace Chapter6Game
 
 
         private Texture2D background { get; set; }
+        #region Textures
         /// <summary>
         ///  Player Sprites and Animation Field
         /// </summary>
@@ -66,7 +74,7 @@ namespace Chapter6Game
         UIHearts hearts = new UIHearts();
         public Effect effect;
 
-
+        #endregion
         public GameRoot()
         {
             Input = new InputManager(this);
@@ -111,15 +119,11 @@ namespace Chapter6Game
             Damaged = Content.Load<Texture2D>("Characters/Player/PlayerDamaged");
             #endregion
 
-            List<Texture2D> textures = new List<Texture2D>();
+            List<Texture2D> textures = new List<Texture2D>(); // Loads in our particle textures to be used for the particle engine
             textures.Add(Content.Load<Texture2D>("Particles/diamond"));
             textures.Add(Content.Load<Texture2D>("Particles/star"));
-            particleEngine = new ParticleEngine(textures, player.position);
+            particleEngine = new ParticleEngine(textures, player.position); // Used to draw and update textures and location of particle engine
 
-            List<Texture2D> textures = new List<Texture2D>();
-            textures.Add(Content.Load<Texture2D>("Particles/diamond"));
-            textures.Add(Content.Load<Texture2D>("Particles/star"));
-            particleEngine = new ParticleEngine(textures, player.position);
 
             coinIdle = Content.Load<Texture2D>("Collectibles/Coins");
             coinSpark = Content.Load<Texture2D>("Collectibles/CoinSpark");
@@ -176,7 +180,7 @@ namespace Chapter6Game
             coin.anim = coinAnims[0];
 
 
-
+            font = Content.Load<SpriteFont>("Font");
 
             background = Content.Load<Texture2D>("Terrain/Sky");
             terrain.LoadContent(Content);
@@ -193,156 +197,65 @@ namespace Chapter6Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-           
-
-            #region Pausing
-
-            if (!paused)
+            if (playerisDead)
             {
-                camera.LookAt(CameraPos);
+                player.playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, 0, 0);
+                player.anim = animations[4];
             }
-            Input.Update(gameTime);
-            if (Input.IsPressed(Keys.P))
+            if (player.position.Y > 450 || player.health <= 0)
             {
-                paused = true;
-            } else if (Input.IsPressed(Keys.O))
-            {
-                paused = false;
+                playerisDead = true;
             }
-
-            #endregion
-
-           
-            #region Keyboard Input
-            if (Input.IsPressed(Keys.W) && !player.hasjumped)
-             {
-               
-                player.position.Y -= 14;
-                player.gravity = -7.5f;
-                player.hasjumped = true;
-                Debug.WriteLine(AnimState);
-            }
-            
-
-            if (Input.IsPressed(Keys.K) )
-            {
-                AnimState = 3;               
-            }
-            else
-            {
-                AnimState = 0;
-            }
-
-            if (Input.IsPressed(Keys.A) && !player.isCollidingside)
-            {
-               
-                    flip = true;
-                    AnimState = 1;
-                    player.position.X -= player.speed;
-                    CameraPos.X -= player.speed;
-                hearts.Positions[0].X -= player.speed;
-                hearts.Positions[1].X -= player.speed;
-                hearts.Positions[2].X -= player.speed;
-                Debug.WriteLine(AnimState);
-            }
-            else
-            {
-                
-                player.anim = animations[0];
-            }
-            
-                if (Input.IsPressed(Keys.D) && !player.isCollidingside)
+                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
-                
-                  flip = false;
-                    CameraPos.X += player.speed;
-                    player.position.X = player.position.X + player.speed;
-                hearts.Positions[0].X += player.speed ;
-                hearts.Positions[1].X += player.speed;
-                hearts.Positions[2].X += player.speed ;
-                AnimState = 1;
+                    gameStarted = true;
                 }
-            else
-            {
-              
-            }
-
-            HandleAnimationCollsions();
-            #endregion
-            if (!paused)
-            {
-                
-                coin.Update(gameTime);
-                AnimStates();
-                player.Update(gameTime);
-            }
-
-
-            particleEngine.EmitterLocation = new Vector2(player.position.X+20, player.position.Y+30);
-            particleEngine.Update();
-
-            #region Controller Input
-            if (capabilities.IsConnected)
-            {
-                AnimStates();
-          
-                GamePadState state = GamePad.GetState(PlayerIndex.One);
-                if (state.IsButtonDown(Buttons.B))
-                {
-                    AnimState = 3;
-                }
-                if (state.IsButtonDown(Buttons.Y))
-                {
-                    AnimState = 3;
-                }
-                if (state.IsButtonDown(Buttons.A) && !player.hasjumped)
-                {
-                   
-                    player.position.Y -= 14;
-                    player.gravity = -7.5f;
-                    player.hasjumped = true;
-                    
-                }
-                if (state.IsButtonDown(Buttons.X) && !player.hasjumped)
+                if (gameStarted)
                 {
                     
-                    player.position.Y -= 14;
-                    player.gravity = -7.5f;
-                    player.hasjumped = true;
-                   
-                }
 
-                if (state.IsButtonDown(Buttons.DPadLeft) && !player.isCollidingside)
-                {
-                    flip = true;
-                    AnimState = 1;
-                    player.position.X -= player.speed;
-                    CameraPos.X -= player.speed;
-                    hearts.Positions[0].X -= player.speed;
-                    hearts.Positions[1].X -= player.speed;
-                    hearts.Positions[2].X -= player.speed;
-                    Debug.WriteLine("Animation Position: " + player.anim.Position);
-                }
-                
-               
-                if (state.IsButtonDown(Buttons.DPadRight) && !player.isCollidingside)
-                {
-                    Debug.WriteLine(AnimState);
-                    flip = false;
-                    AnimState = 1;
-                    player.position.X += player.speed;
-                    CameraPos.X += player.speed;
-                    hearts.Positions[0].X += player.speed;
-                    hearts.Positions[1].X += player.speed;
-                    hearts.Positions[2].X += player.speed;
-                }
+                    #region Pausing
 
-
-                if (capabilities.HasLeftXThumbStick)
-                {
-                    //Moves player with the Thumbstick
-                    if(state.ThumbSticks.Left.X < -0.5f && !player.isCollidingside)
+                    if (!paused)
                     {
+                        camera.LookAt(CameraPos);
+                    }
+                    Input.Update(gameTime);
+                    if (Input.IsPressed(Keys.P))
+                    {
+                        paused = true;
+                    }
+                    else if (Input.IsPressed(Keys.O))
+                    {
+                        paused = false;
+                    }
+
+                    #endregion
+
+
+                    #region Keyboard Input
+                    if (Input.IsPressed(Keys.W) && !player.hasjumped)
+                    {
+
+                        player.position.Y -= 14;
+                        player.gravity = -7.5f;
+                        player.hasjumped = true;
+                        Debug.WriteLine(AnimState);
+                    }
+
+
+                    if (Input.IsPressed(Keys.K))
+                    {
+                        AnimState = 3;
+                    }
+                    else
+                    {
+                        AnimState = 0;
+                    }
+
+                    if (Input.IsPressed(Keys.A) && !player.isCollidingside)
+                    {
+
                         flip = true;
                         AnimState = 1;
                         player.position.X -= player.speed;
@@ -350,32 +263,142 @@ namespace Chapter6Game
                         hearts.Positions[0].X -= player.speed;
                         hearts.Positions[1].X -= player.speed;
                         hearts.Positions[2].X -= player.speed;
+                        Debug.WriteLine(AnimState);
                     }
-                    if (state.ThumbSticks.Left.X > .5f && !player.isCollidingside)
+                    else
                     {
+
+                        player.anim = animations[0];
+                    }
+
+                    if (Input.IsPressed(Keys.D) && !player.isCollidingside)
+                    {
+
                         flip = false;
-                        AnimState = 1;
-                        player.position.X += player.speed;
                         CameraPos.X += player.speed;
+                        player.position.X = player.position.X + player.speed;
                         hearts.Positions[0].X += player.speed;
                         hearts.Positions[1].X += player.speed;
                         hearts.Positions[2].X += player.speed;
+                        AnimState = 1;
                     }
+                    else
+                    {
+
+                    }
+
+                    HandleAnimationCollsions();
+                    #endregion
+                    if (!paused)
+                    {
+
+                        coin.Update(gameTime);
+                        AnimStates();
+
+                    if(!playerisDead)
+                        player.Update(gameTime);
+                    }
+
+
+                    particleEngine.EmitterLocation = new Vector2(player.position.X + 21, player.position.Y + 30);
+                    particleEngine.Update();
+
+                    #region Controller Input
+                    if (capabilities.IsConnected)
+                    {
+                        AnimStates();
+
+                        GamePadState state = GamePad.GetState(PlayerIndex.One);
+                        if (state.IsButtonDown(Buttons.B))
+                        {
+                            AnimState = 3;
+                        }
+                        if (state.IsButtonDown(Buttons.Y))
+                        {
+                            AnimState = 3;
+                        }
+                        if (state.IsButtonDown(Buttons.A) && !player.hasjumped)
+                        {
+
+                            player.position.Y -= 14;
+                            player.gravity = -7.5f;
+                            player.hasjumped = true;
+
+                        }
+                        if (state.IsButtonDown(Buttons.X) && !player.hasjumped)
+                        {
+
+                            player.position.Y -= 14;
+                            player.gravity = -7.5f;
+                            player.hasjumped = true;
+
+                        }
+
+                        if (state.IsButtonDown(Buttons.DPadLeft) && !player.isCollidingside)
+                        {
+                            flip = true;
+                            AnimState = 1;
+                            player.position.X -= player.speed;
+                            CameraPos.X -= player.speed;
+                            hearts.Positions[0].X -= player.speed;
+                            hearts.Positions[1].X -= player.speed;
+                            hearts.Positions[2].X -= player.speed;
+                            Debug.WriteLine("Animation Position: " + player.anim.Position);
+                        }
+
+
+                        if (state.IsButtonDown(Buttons.DPadRight) && !player.isCollidingside)
+                        {
+                            Debug.WriteLine(AnimState);
+                            flip = false;
+                            AnimState = 1;
+                            player.position.X += player.speed;
+                            CameraPos.X += player.speed;
+                            hearts.Positions[0].X += player.speed;
+                            hearts.Positions[1].X += player.speed;
+                            hearts.Positions[2].X += player.speed;
+                        }
+
+
+                        if (capabilities.HasLeftXThumbStick)
+                        {
+                            //Moves player with the Thumbstick
+                            if (state.ThumbSticks.Left.X < -0.5f && !player.isCollidingside)
+                            {
+                                flip = true;
+                                AnimState = 1;
+                                player.position.X -= player.speed;
+                                CameraPos.X -= player.speed;
+                                hearts.Positions[0].X -= player.speed;
+                                hearts.Positions[1].X -= player.speed;
+                                hearts.Positions[2].X -= player.speed;
+                            }
+                            if (state.ThumbSticks.Left.X > .5f && !player.isCollidingside)
+                            {
+                                flip = false;
+                                AnimState = 1;
+                                player.position.X += player.speed;
+                                CameraPos.X += player.speed;
+                                hearts.Positions[0].X += player.speed;
+                                hearts.Positions[1].X += player.speed;
+                                hearts.Positions[2].X += player.speed;
+                            }
+                        }
+                    }
+
+                    #endregion
                 }
-            }
-
-            #endregion
-
+            
             base.Update(gameTime);
         }
         #region debug
         public void DebugPlayer()
         {
 
-           
+
             if (Input.IsHeld(Keys.NumPad0))
             {
-                player.speed -= 1 ;
+                player.speed -= 1;
                 Debug.WriteLine(player.speed);
             }
             if (Input.IsHeld(Keys.NumPad1))
@@ -404,7 +427,7 @@ namespace Chapter6Game
                 player.playerRect.Width++;
                 Debug.WriteLine(player.playerRect.Width);
             }
-            
+
             if (Input.IsHeld(Keys.NumPad6))
             {
                 player.playerRect.Height--;
@@ -433,8 +456,8 @@ namespace Chapter6Game
             }
         }
 
-        
-        public  void AnimStates()
+
+        public void AnimStates()
         {
             switch (AnimState)
             {
@@ -456,45 +479,67 @@ namespace Chapter6Game
                     break;
             }
         }
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var transFormMatrix = camera.GetViewMatrix();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: transFormMatrix);
-           
-            #region Textures and Shader
-            effect.CurrentTechnique.Passes[0].Apply();
-            _spriteBatch.Draw(background, new Vector2(-1413, 50), Color.White);
-            _spriteBatch.Draw(background, new Vector2(-942, 50), Color.White);
-            _spriteBatch.Draw(background, new Vector2(-471, 50), Color.White);
+
+            if (gameStarted)
+            {
+                #region Textures and Shader
+                effect.CurrentTechnique.Passes[0].Apply();
+                _spriteBatch.Draw(background, new Vector2(-1413, 50), Color.White);
+                _spriteBatch.Draw(background, new Vector2(-942, 50), Color.White);
+                _spriteBatch.Draw(background, new Vector2(-471, 50), Color.White);
                 _spriteBatch.Draw(background, new Vector2(0, 50), Color.White);
                 _spriteBatch.Draw(background, new Vector2(471, 50), Color.White);
-            _spriteBatch.Draw(background, new Vector2(942, 50), Color.White);
-            #endregion
+                _spriteBatch.Draw(background, new Vector2(942, 50), Color.White);
+                #endregion
 
-            terrain.Draw(_spriteBatch);
+                terrain.Draw(_spriteBatch);
 
-           
-            
                 particleEngine.Draw(_spriteBatch);
-            
-            if (flip)
+
+                if (flip)
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.FlipHorizontally);
-                
-            }
+
+                }
                 else
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.None);
                 }
-            
-            coin.anim.Draw(_spriteBatch, SpriteEffects.None);
-            hearts.Draw(_spriteBatch);
 
+                coin.anim.Draw(_spriteBatch, SpriteEffects.None);
+                hearts.Draw(_spriteBatch);
+            }
+
+            if (!gameStarted)
+            {
+                string title = "Mini Man";
+                string startText = "Press Enter To Start";
+                _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+
+                _spriteBatch.DrawString(font, title, new Vector2(150, 200), Color.Black);
+
+                _spriteBatch.DrawString(font, startText, new Vector2(115, 220), Color.Black);
+
+            }
+
+            if (playerisDead)
+            {
+                string gameOver = "Game Over";
+                
+                _spriteBatch.DrawString(font, gameOver, CameraPos, Color.Black);
+            }
             _spriteBatch.End();
 
             base.Draw(gameTime);
+
         }
     }
 }

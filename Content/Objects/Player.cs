@@ -175,18 +175,7 @@ namespace Chapter6Game.Content.Objects
 
 
 
-            //add falling death logic
-            if (position.Y > 450)
-            {
-                position.Y -= 200;
-            }
-            // Add death Logic
-            if (health <= 0)
-            {
-                
-                
-            }
-
+           
             
 
             

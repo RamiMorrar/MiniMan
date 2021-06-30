@@ -106,7 +106,7 @@ namespace Chapter6Game.Content.Objects
     public class SamuraiBoss: Enemy
     {
         public Vector2 Position;
-
+        public int health = 3;
         public Rectangle SwordAttack;
         Timer timer;
         public void OnHit()
