@@ -37,7 +37,7 @@ namespace Chapter6Game
         public SpriteFont font;
 
         bool flip = false;
-        Enemy enemy = new Enemy();
+        Enemy enemy;
         bool paused = false;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -197,6 +197,8 @@ namespace Chapter6Game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+
+            redEnemy.anim = redAnimations[0];
             if (playerisDead)
             {
                 player.playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, 0, 0);
@@ -487,6 +489,9 @@ namespace Chapter6Game
             var transFormMatrix = camera.GetViewMatrix();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: transFormMatrix);
+            samurai.Update(gameTime);
+            redEnemy.Update(gameTime);
+            blueEnemy.Update(gameTime);
 
             if (gameStarted)
             {

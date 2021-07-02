@@ -23,9 +23,8 @@ namespace Chapter6Game.Content.Objects
         public SpriteEffects flip;
       
         public bool hasjumped =false;
-        
-        Enemy e = new Enemy();
 
+        Enemy e;
         Terrain terrain = new Terrain();
         RedEnemy enemyRed = new RedEnemy();
         BlueEnemy enemyBlue = new BlueEnemy();

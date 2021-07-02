@@ -14,21 +14,19 @@ namespace Chapter6Game.Content.Objects
         public Vector2 Position;
        public bool enemyFlip;
         Terrain terrain = new Terrain();
-      
-        // public Player playerFunctions = new Player();
-        public Rectangle enemyRect;
-        public Enemy()
-        {
-            
-  
-        }
 
+        // public Player playerFunctions = new Player();
+        float speed;
+        public SpriteAnimation anim;
+        public Rectangle enemyRect;
+        
         public static List<Enemy> enemies = new List<Enemy>();
 
-        public Enemy(Rectangle rectangle, float Speed)
+        public Enemy(Rectangle rectangle, float Speed, SpriteAnimation animator)
         {
             enemyRect = rectangle;
-            
+            speed = Speed;
+            animator = anim;
         }
 
         public void Update (GameTime gameTime)
@@ -67,11 +65,12 @@ namespace Chapter6Game.Content.Objects
     public class RedEnemy : Enemy
     {
         public Rectangle topofHead;
-        
+        SpriteAnimation redAnim;
         public RedEnemy()
         {
             Position = new Vector2(200, 300);
-           
+            enemyRect = new Rectangle((int)Position.X, (int)Position.Y,48,12 );
+            redAnim = anim;
         }
         public void Initialize()
         {
@@ -85,11 +84,14 @@ namespace Chapter6Game.Content.Objects
      
     }
 
-    public class BlueEnemy: Enemy
+    public class BlueEnemy : Enemy
     {
         
         public Rectangle Body;
-        
+        public BlueEnemy()
+        {
+
+        }
         public void Update(GameTime gameTime)
         {
 
@@ -103,12 +105,13 @@ namespace Chapter6Game.Content.Objects
 
         }
     }
-    public class SamuraiBoss: Enemy
+    public class SamuraiBoss : Enemy
     {
+       
         public Vector2 Position;
         public int health = 3;
         public Rectangle SwordAttack;
-        Timer timer;
+      
         public void OnHit()
         {
 
