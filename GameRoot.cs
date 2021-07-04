@@ -506,8 +506,10 @@ namespace Chapter6Game
                 #endregion
 
                 terrain.Draw(_spriteBatch);
-
-                particleEngine.Draw(_spriteBatch);
+                if (!playerisDead)
+                {
+                    particleEngine.Draw(_spriteBatch);
+                }
 
                 if (flip)
                 {
