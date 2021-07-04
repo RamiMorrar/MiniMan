@@ -42,9 +42,9 @@ namespace Chapter6Game
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        SamuraiBoss samurai = new SamuraiBoss();
-        RedEnemy redEnemy = new RedEnemy();
-        BlueEnemy blueEnemy = new BlueEnemy();
+        SamuraiBoss samurai;
+        RedEnemy redEnemy;
+        BlueEnemy blueEnemy;
 
 
         private Texture2D background { get; set; }

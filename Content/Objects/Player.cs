@@ -26,9 +26,9 @@ namespace Chapter6Game.Content.Objects
 
         Enemy e;
         Terrain terrain = new Terrain();
-        RedEnemy enemyRed = new RedEnemy();
-        BlueEnemy enemyBlue = new BlueEnemy();
-        SamuraiBoss boss = new SamuraiBoss();
+        RedEnemy enemyRed;
+        BlueEnemy enemyBlue;
+        SamuraiBoss boss;
         public bool iscolliding = false;
        
       

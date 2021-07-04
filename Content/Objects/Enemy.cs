@@ -22,14 +22,14 @@ namespace Chapter6Game.Content.Objects
         
         public static List<Enemy> enemies = new List<Enemy>();
 
-        public Enemy(Rectangle rectangle, float Speed, SpriteAnimation animator)
+        public Enemy(Rectangle rectangle, float Speed)
         {
             enemyRect = rectangle;
             speed = Speed;
-            animator = anim;
+          
         }
 
-        public void Update (GameTime gameTime)
+        public new virtual void Update (GameTime gameTime)
         {
             Position.Y += Gravity;
 
@@ -66,7 +66,7 @@ namespace Chapter6Game.Content.Objects
     {
         public Rectangle topofHead;
         SpriteAnimation redAnim;
-        public RedEnemy()
+        public RedEnemy(Rectangle rectangle, float Speed) :base(rectangle, Speed)
         {
             Position = new Vector2(200, 300);
             enemyRect = new Rectangle((int)Position.X, (int)Position.Y,48,12 );
@@ -77,7 +77,7 @@ namespace Chapter6Game.Content.Objects
             
             enemyRect = new Rectangle((int)Position.X, (int)Position.Y, 48, 33);
         }
-      public void Update(GameTime gameTime)
+      public override void Update(GameTime gameTime)
         {
            
         }
@@ -88,26 +88,30 @@ namespace Chapter6Game.Content.Objects
     {
         
         public Rectangle Body;
-        public BlueEnemy()
+        public BlueEnemy(Rectangle rectangle, float Speed) :base(rectangle, Speed)
         {
 
         }
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
-           
+
             // float distance = MathHelper.Distance(playerFunctions.position.X, Position.X);
             //if (distance < 20)
             //{
             //    //add patrol logic
             //}
 
-
+            base.Update(gameTime);
         }
     }
     public class SamuraiBoss : Enemy
     {
-       
+       public SamuraiBoss(Rectangle rectangle, float Speed) :base(rectangle,Speed)
+        {
+
+        }
+
         public Vector2 Position;
         public int health = 3;
         public Rectangle SwordAttack;
