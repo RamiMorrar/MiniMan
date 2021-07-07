@@ -15,6 +15,8 @@ namespace Chapter6Game
 {
     public class GameRoot : Game
     {
+
+        #region Objects
         bool gameStarted = false;
 
         OrthographicCamera camera;
@@ -45,7 +47,7 @@ namespace Chapter6Game
         SamuraiBoss samurai;
         RedEnemy redEnemy;
         BlueEnemy blueEnemy;
-
+        #endregion
 
         private Texture2D background { get; set; }
         #region Textures
@@ -487,7 +489,6 @@ namespace Chapter6Game
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var transFormMatrix = camera.GetViewMatrix();
-
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: transFormMatrix);
             samurai.Update(gameTime);
             redEnemy.Update(gameTime);

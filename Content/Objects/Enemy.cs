@@ -111,7 +111,10 @@ namespace Chapter6Game.Content.Objects
         {
 
         }
+        public void Update(GameTime gameTime)
+        {
 
+        }
         public Vector2 Position;
         public int health = 3;
         public Rectangle SwordAttack;
