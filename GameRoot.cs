@@ -22,7 +22,7 @@ namespace Chapter6Game
         OrthographicCamera camera;
 
         bool playerisDead = false;
-
+        bool playerWon = false;
 
         ParticleEngine particleEngine; // Sets a class variable
 
@@ -299,7 +299,7 @@ namespace Chapter6Game
                         coin.Update(gameTime);
                         AnimStates();
 
-                    if(!playerisDead)
+                    if(!playerisDead  || playerWon)
                         player.Update(gameTime);
                     }
 
