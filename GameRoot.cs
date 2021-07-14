@@ -22,6 +22,7 @@ namespace Chapter6Game
         OrthographicCamera camera;
 
         bool playerisDead = false;
+
         bool playerWon = false;
 
         ParticleEngine particleEngine; // Sets a class variable
@@ -97,7 +98,7 @@ namespace Chapter6Game
             player.Initialize();
             terrain.Initialize();
             hearts.Initialize();
-
+            
 
 
 
@@ -201,15 +202,17 @@ namespace Chapter6Game
 
 
             redEnemy.anim = redAnimations[0];
-            if (playerisDead)
-            {
-                player.playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, 0, 0);
-                player.anim = animations[4];
-            }
+
             if (player.position.Y > 450 || player.health <= 0)
             {
                 playerisDead = true;
             }
+            if (playerisDead == true)
+            {
+                player.playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, 0, 0);
+                player.anim = animations[4];
+            }
+           
                 if (Keyboard.GetState().IsKeyDown(Keys.Enter))
                 {
                     gameStarted = true;
@@ -299,8 +302,10 @@ namespace Chapter6Game
                         coin.Update(gameTime);
                         AnimStates();
 
-                    if(!playerisDead  || playerWon)
+                    if (!playerisDead || !playerWon)
+                    {
                         player.Update(gameTime);
+                    }
                     }
 
 
@@ -543,6 +548,12 @@ namespace Chapter6Game
                 string gameOver = "Game Over";
                 
                 _spriteBatch.DrawString(font, gameOver, CameraPos, Color.Black);
+            }
+
+            if (playerWon)
+            {
+                string Won = "Congrats, you won!";
+                _spriteBatch.DrawString(font, Won, CameraPos, Color.Black);
             }
 
            if (samurai.health <= 0)
