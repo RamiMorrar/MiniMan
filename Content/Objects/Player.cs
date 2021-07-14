@@ -149,12 +149,12 @@ namespace Chapter6Game.Content.Objects
             }
             #endregion
 
-            if (playerRect.Intersects(e.enemyRect))
-            {
-                position.X -= 2;
-                position.Y += 2;
-                health--;
-            }
+            //if (playerRect.Intersects(e.enemyRect))
+            //{
+            //    position.X -= 2;
+            //    position.Y += 2;
+            //    health--;
+            //}
         }
         public void Update(GameTime gameTime)
         {

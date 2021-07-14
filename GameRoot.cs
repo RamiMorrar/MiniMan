@@ -45,9 +45,7 @@ namespace Chapter6Game
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        SamuraiBoss samurai;
-        RedEnemy redEnemy;
-        BlueEnemy blueEnemy;
+        
         #endregion
 
         private Texture2D background { get; set; }
@@ -199,24 +197,15 @@ namespace Chapter6Game
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-
-            redEnemy.anim = redAnimations[0];
-
-            if (player.position.Y > 450 || player.health <= 0)
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
-                playerisDead = true;
+                gameStarted = true;
             }
-            if (playerisDead == true)
-            {
-                player.playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, 0, 0);
-                player.anim = animations[4];
-            }
+
            
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter))
-                {
-                    gameStarted = true;
-                }
+               
+
+
                 if (gameStarted)
                 {
                     
@@ -237,11 +226,22 @@ namespace Chapter6Game
                         paused = false;
                     }
 
-                    #endregion
+                #endregion
 
+               
 
-                    #region Keyboard Input
-                    if (Input.IsPressed(Keys.W) && !player.hasjumped)
+                if (player.position.Y > 450 || player.health <= 0)
+                {
+                    playerisDead = true;
+                }
+                if (playerisDead == true)
+                {
+                    player.playerRect = new Rectangle((int)player.position.X, (int)player.position.Y, 0, 0);
+                    player.anim = animations[4];
+                }
+
+                #region Keyboard Input
+                if (Input.IsPressed(Keys.W) && !player.hasjumped)
                     {
 
                         player.position.Y -= 14;
@@ -455,10 +455,10 @@ namespace Chapter6Game
             {
                 coin.anim = coinAnims[1];
             }
-            if (player.playerRect.Intersects(enemy.enemyRect))
-            {
-                player.anim = animations[4];
-            }
+            //if (player.playerRect.Intersects(enemy.enemyRect))
+            //{
+            //    player.anim = animations[4];
+            //}
             else
             {
                 player.anim = animations[0];
@@ -495,9 +495,9 @@ namespace Chapter6Game
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var transFormMatrix = camera.GetViewMatrix();
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: transFormMatrix);
-            samurai.Update(gameTime);
-            redEnemy.Update(gameTime);
-            blueEnemy.Update(gameTime);
+            //samurai.Update(gameTime);
+            //redEnemy.Update(gameTime);
+            //blueEnemy.Update(gameTime);
 
             if (gameStarted)
             {
@@ -556,12 +556,12 @@ namespace Chapter6Game
                 _spriteBatch.DrawString(font, Won, CameraPos, Color.Black);
             }
 
-           if (samurai.health <= 0)
-            {
-                string conText = "Congrats, you won!";
+           //if (samurai.health <= 0)
+           // {
+           //     string conText = "Congrats, you won!";
 
-                _spriteBatch.DrawString(font, conText, CameraPos, Color.Black);
-            }
+           //     _spriteBatch.DrawString(font, conText, CameraPos, Color.Black);
+           // }
             _spriteBatch.End();
 
             base.Draw(gameTime);
