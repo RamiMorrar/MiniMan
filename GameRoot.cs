@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using Chapter6Game.Content.Objects;
 using MonoGame.Extended.ViewportAdapters;
 using MiniMan.Content.Objects;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Chapter6Game
 {
@@ -45,11 +47,11 @@ namespace Chapter6Game
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        
-        #endregion
 
-        private Texture2D background { get; set; }
+        #endregion
         #region Textures
+        private Texture2D background { get; set; }
+
         /// <summary>
         ///  Player Sprites and Animation Field
         /// </summary>
@@ -75,6 +77,13 @@ namespace Chapter6Game
         UIHearts hearts = new UIHearts();
         public Effect effect;
 
+        #endregion
+
+        #region Audio
+        SoundEffect jumpSnd, AttackSound, getHit, EnemyHitSound, CoinSnd, SamuraiSlash; 
+        Song[] songs = new Song[4];
+            Song Menu, main, boss, end;
+        
         #endregion
         public GameRoot()
         {
@@ -157,7 +166,11 @@ namespace Chapter6Game
             coinAnims[1].IsLooping = false;
             #endregion
 
-
+            Menu = Content.Load<Song>("Music/MainMenu");
+            main = Content.Load<Song>("Music/Theme");
+            boss = Content.Load<Song>("Music/Boss");
+            end = Content.Load<Song>("Music/GameOver");
+           
             // red enemy Animations
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
             redAnimations[1] = new SpriteAnimation(patrol, 6, 2);

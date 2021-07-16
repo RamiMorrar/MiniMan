@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using Chapter6Game;
+using System.Collections.Generic;
 
 namespace Chapter6Game.Content.Objects
 {  public class Player
     {
        
-    
         public int health = 3;
         public bool isCollidingside = false;
       public Rectangle playerRect;
@@ -24,7 +24,8 @@ namespace Chapter6Game.Content.Objects
       
         public bool hasjumped =false;
 
-        Enemy e;
+        private List<Enemy> enemies = new List<Enemy>();
+
         Terrain terrain = new Terrain();
         RedEnemy enemyRed;
         BlueEnemy enemyBlue;
