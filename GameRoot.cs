@@ -166,11 +166,22 @@ namespace Chapter6Game
             coinAnims[1].IsLooping = false;
             #endregion
 
+
+            #region Audio Load
+            jumpSnd = Content.Load<SoundEffect>("Fx/Jump");
+            CoinSnd = Content.Load<SoundEffect>("Fx/Coin");
+            getHit = Content.Load<SoundEffect>("Fx/GetHit");
+            EnemyHitSound = Content.Load<SoundEffect>("Fx/EnemyHitSound");
+            AttackSound = Content.Load<SoundEffect>("Fx/AttackSound");
+            SamuraiSlash = Content.Load<SoundEffect>("Fx/Slash");
+
+
             Menu = Content.Load<Song>("Music/MainMenu");
             main = Content.Load<Song>("Music/Theme");
             boss = Content.Load<Song>("Music/Boss");
             end = Content.Load<Song>("Music/GameOver");
-           
+            #endregion
+
             // red enemy Animations
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
             redAnimations[1] = new SpriteAnimation(patrol, 6, 2);
