@@ -24,15 +24,18 @@ namespace Chapter6Game
         OrthographicCamera camera;
 
         bool playerisDead = false;
-
+        bool punchisActive = false;
         bool playerWon = false;
 
         ParticleEngine particleEngine; // Sets a class variable
 
         public SamuraiBoss Samurai;
+        
+
 
         InputManager Input;
         GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
+        float punchDelay = 0;
 
         // Put Camera at X: 745 when at end of level
         public Vector2 CameraPos;
@@ -228,8 +231,8 @@ namespace Chapter6Game
                 gameStarted = true;
                 MediaPlayer.Play(main);
             }
-
-           
+            punchDelay += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Debug.WriteLine(punchDelay);
             //   if (Samurai.health <= 0)
             //{
             //    MediaPlayer.Play(endSong);
@@ -278,16 +281,23 @@ namespace Chapter6Game
                         player.hasjumped = true;
                         Debug.WriteLine(AnimState);
                     }
+                
 
-
-                    if (Input.IsPressed(Keys.K))
+                if (Input.IsPressed(Keys.K) && punchDelay >= 0.65f)
                     {
+                    punchDelay = 0;
                     AttackSound.Play();
-                        AnimState = 3;
+                   
                     }
+                if (Input.IsPressed(Keys.K))
+                {
+                    AnimState = 3;
+                }
+                
                     else
                     {
                         AnimState = 0;
+                    
                     }
 
                     if (Input.IsPressed(Keys.A) && !player.isCollidingside)
@@ -484,7 +494,7 @@ namespace Chapter6Game
             if (coin.BoundingCircle.Intersects(player.playerRect))
             {
                 CoinSnd.Play();
-                coin.BoundingCircle.= 0;
+                
                 coin.anim = coinAnims[1];
             }
             //if (player.playerRect.Intersects(enemy.enemyRect))
