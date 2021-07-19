@@ -287,7 +287,6 @@ namespace Chapter6Game
                     {
                     punchDelay = 0;
                     AttackSound.Play();
-                   
                     }
                 if (Input.IsPressed(Keys.K))
                 {
