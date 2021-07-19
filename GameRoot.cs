@@ -483,6 +483,8 @@ namespace Chapter6Game
         {
             if (coin.BoundingCircle.Intersects(player.playerRect))
             {
+                CoinSnd.Play();
+                coin.BoundingCircle.= 0;
                 coin.anim = coinAnims[1];
             }
             //if (player.playerRect.Intersects(enemy.enemyRect))
