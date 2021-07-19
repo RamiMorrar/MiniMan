@@ -249,6 +249,54 @@
 /processorParam:TextureFormat=Compressed
 /build:Font.spritefont
 
+#begin Fx/Coin.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Fx/Coin.wav
+
+#begin Fx/EnemyHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Fx/EnemyHit.wav
+
+#begin Fx/GetHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Fx/GetHit.wav
+
+#begin Fx/Jump.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Fx/Jump.wav
+
+#begin Fx/Punch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Fx/Punch.wav
+
+#begin Fx/Slash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Fx/Slash.wav
+
+#begin Music/On My Way.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/On My Way.mp3
+
+#begin Music/Victory.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Music/Victory.mp3
+
 #begin Particles/diamond.png
 /importer:TextureImporter
 /processor:TextureProcessor

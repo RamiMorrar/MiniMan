@@ -29,6 +29,7 @@ namespace Chapter6Game
 
         ParticleEngine particleEngine; // Sets a class variable
 
+        public SamuraiBoss Samurai;
 
         InputManager Input;
         GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
@@ -42,7 +43,7 @@ namespace Chapter6Game
         public SpriteFont font;
 
         bool flip = false;
-        Enemy enemy;
+        public Enemy enemy;
         bool paused = false;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -82,7 +83,7 @@ namespace Chapter6Game
         #region Audio
         SoundEffect jumpSnd, AttackSound, getHit, EnemyHitSound, CoinSnd, SamuraiSlash; 
         Song[] songs = new Song[4];
-            Song Menu, main, boss, end;
+            Song Menu, main, boss, endSong;
         
         #endregion
         public GameRoot()
@@ -92,6 +93,7 @@ namespace Chapter6Game
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             coin = new Coins(this);
+            Samurai = new SamuraiBoss(enemy.enemyRect, enemy.speed);
         }
 
         protected override void Initialize()
@@ -171,15 +173,15 @@ namespace Chapter6Game
             jumpSnd = Content.Load<SoundEffect>("Fx/Jump");
             CoinSnd = Content.Load<SoundEffect>("Fx/Coin");
             getHit = Content.Load<SoundEffect>("Fx/GetHit");
-            EnemyHitSound = Content.Load<SoundEffect>("Fx/EnemyHitSound");
-            AttackSound = Content.Load<SoundEffect>("Fx/AttackSound");
+            EnemyHitSound = Content.Load<SoundEffect>("Fx/EnemyHit"
+               );
+            AttackSound = Content.Load<SoundEffect>("Fx/Punch");
             SamuraiSlash = Content.Load<SoundEffect>("Fx/Slash");
 
 
-            Menu = Content.Load<Song>("Music/MainMenu");
-            main = Content.Load<Song>("Music/Theme");
-            boss = Content.Load<Song>("Music/Boss");
-            end = Content.Load<Song>("Music/GameOver");
+            main =  Content.Load<Song>("Music/On My Way");
+           
+            endSong = Content.Load<Song>("Music/Victory");
             #endregion
 
             // red enemy Animations
@@ -224,15 +226,18 @@ namespace Chapter6Game
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 gameStarted = true;
+                MediaPlayer.Play(main);
             }
 
            
-               
+               if (Samurai.health <= 0)
+            {
+                MediaPlayer.Play(endSong);
+            }
 
 
                 if (gameStarted)
                 {
-                    
 
                     #region Pausing
 
@@ -560,12 +565,15 @@ namespace Chapter6Game
                 string title = "Mini Man";
                 string startText = "Press Enter To Start";
                 _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
-
+                
                 _spriteBatch.DrawString(font, title, new Vector2(150, 200), Color.Black);
 
                 _spriteBatch.DrawString(font, startText, new Vector2(115, 220), Color.Black);
 
             }
+           
+           
+
 
             if (playerisDead)
             {

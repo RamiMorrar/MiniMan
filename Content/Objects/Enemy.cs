@@ -16,7 +16,7 @@ namespace Chapter6Game.Content.Objects
         Terrain terrain = new Terrain();
 
         // public Player playerFunctions = new Player();
-        float speed;
+        public float speed;
         public SpriteAnimation anim;
         public Rectangle enemyRect;
         
