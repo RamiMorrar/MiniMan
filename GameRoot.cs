@@ -93,7 +93,7 @@ namespace Chapter6Game
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             coin = new Coins(this);
-            Samurai = new SamuraiBoss(enemy.enemyRect, enemy.speed);
+            
         }
 
         protected override void Initialize()
@@ -230,10 +230,10 @@ namespace Chapter6Game
             }
 
            
-               if (Samurai.health <= 0)
-            {
-                MediaPlayer.Play(endSong);
-            }
+            //   if (Samurai.health <= 0)
+            //{
+            //    MediaPlayer.Play(endSong);
+            //}
 
 
                 if (gameStarted)
@@ -272,7 +272,7 @@ namespace Chapter6Game
                 #region Keyboard Input
                 if (Input.IsPressed(Keys.W) && !player.hasjumped)
                     {
-
+                    jumpSnd.Play();
                         player.position.Y -= 14;
                         player.gravity = -7.5f;
                         player.hasjumped = true;
@@ -282,6 +282,7 @@ namespace Chapter6Game
 
                     if (Input.IsPressed(Keys.K))
                     {
+                    AttackSound.Play();
                         AnimState = 3;
                     }
                     else
