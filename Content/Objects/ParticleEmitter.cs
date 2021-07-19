@@ -8,23 +8,22 @@ namespace MiniMan.Content.Objects
 {
     public class Particle
     {
+        public Texture2D Texture { get; set; }        
+        public Vector2 Position { get; set; }       
+        public Vector2 Velocity { get; set; }        
+        public float Angl { get; set; }            
+        public float AngularVelocity { get; set; }   
+        public Color Color { get; set; }            
+        public float Size { get; set; }                
+        public int TTL { get; set; }  
 
-        public Texture2D Texture { get; set; }        // The texture that will be drawn to represent the particle
-        public Vector2 Position { get; set; }        // The current position of the particle        
-        public Vector2 Velocity { get; set; }        // The speed of the particle at the current instance
-        public float Angle { get; set; }            // The current angle of rotation of the particle
-        public float AngularVelocity { get; set; }    // The speed that the angle is changing
-        public Color Color { get; set; }            // The color of the particle
-        public float Size { get; set; }                // The size of the particle
-        public int TTL { get; set; }                // The 'time to live' of the particle
-
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity,
-            float angle, float angularVelocity, Color color, float size, int ttl)
+        public Particle(Texture2D texture, Vector2 pos, Vector2 velocity,
+            float angl, float angularVelocity, Color color, float size, int ttl)
         {
             Texture = texture;
-            Position = position;
+            Position = pos;
             Velocity = velocity;
-            Angle = angle;
+            Angl = angl;
             AngularVelocity = angularVelocity;
             Color = color;
             Size = size;
@@ -35,42 +34,41 @@ namespace MiniMan.Content.Objects
         {
             TTL--;
             Position += Velocity;
-            Angle += AngularVelocity;
+            Angl += AngularVelocity;
         }
 
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch sprite)
         {
             Rectangle sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
             Vector2 origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 
-            spriteBatch.Draw(Texture, Position, sourceRectangle, Color,
-                Angle, origin, Size, SpriteEffects.None, 0f);
+            sprite.Draw(Texture, Position, sourceRectangle, Color,
+                Angl, origin, Size, SpriteEffects.None, 0f);
         }
 
     }
-
     public class ParticleEngine
     {
-        private Random random;
-        public Vector2 EmitterLocation { get; set; }
+        private Random rand;
+        public Vector2 EmitterLoc { get; set; }
         private List<Particle> particles;
         private List<Texture2D> textures;
 
 
-        public ParticleEngine(List<Texture2D> textures, Vector2 location)
+        public ParticleEngine(List<Texture2D> textures, Vector2 emitterLoc)
         {
-            EmitterLocation = location;
+            EmitterLoc =  emitterLoc;
             this.textures = textures;
             this.particles = new List<Particle>();
-            random = new Random();
+            rand = new Random();
         }
 
         public void Update()
         {
-            int total = 5;
+            int totalParticles = 3;
 
-            for (int i = 0; i < total; i++)
+            for (int i = 0; i < totalParticles; i++)
             {
                 particles.Add(GenerateNewParticle());
             }
@@ -88,34 +86,28 @@ namespace MiniMan.Content.Objects
 
         private Particle GenerateNewParticle()
         {
-            Texture2D texture = textures[random.Next(textures.Count)];
-            Vector2 position = EmitterLocation;
+            Texture2D texture = textures[rand.Next(textures.Count)];
+            Vector2 position = EmitterLoc;
             Vector2 velocity = new Vector2(
-                                    1f * (float)(random.NextDouble() * 1 - 1),
-                                    1f * (float)(random.NextDouble() * 1 - 1));
+                                    1f * (float)(rand.NextDouble() * 1 - 1),
+                                    1f * (float)(rand.NextDouble() * 1 - 1));
             float angle = 0;
-            float angularVelocity = 0.1f * (float)(random.NextDouble() * 2 - 1);
+            float angularVelocity = 0.1f * (float)(rand.NextDouble() * 1 - 1);
             Color color = new Color(
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble(),
-                        (float)random.NextDouble());
-            float size = (float)random.NextDouble();
-            int ttl = 8 + random.Next(5);
-
+                        (float)rand.NextDouble(),
+                        (float)rand.NextDouble(),
+                        (float)rand.NextDouble());
+            float size = (float)rand.NextDouble();
+            int ttl = 6 + rand.Next(5);
             return new Particle(texture, position, velocity, angle, angularVelocity, color, size, ttl);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch sprite)
         {
-           
             for (int index = 0; index < particles.Count; index++)
             {
-                particles[index].Draw(spriteBatch);
+                particles[index].Draw(sprite);
             }
-
-           
         }
-
-
     }
 }
