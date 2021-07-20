@@ -65,11 +65,13 @@ namespace Chapter6Game.Content.Objects
     public class RedEnemy : Enemy
     {
         public Rectangle topofHead;
+        
         SpriteAnimation redAnim;
         public RedEnemy(Rectangle rectangle, float Speed) :base(rectangle, Speed)
         {
             Position = new Vector2(200, 300);
             enemyRect = new Rectangle((int)Position.X, (int)Position.Y,48,12 );
+            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 20, 44, 20);
             redAnim = anim;
         }
         public void Initialize()
