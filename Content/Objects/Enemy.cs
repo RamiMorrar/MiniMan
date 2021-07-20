@@ -19,7 +19,7 @@ namespace Chapter6Game.Content.Objects
         public float speed;
         public SpriteAnimation anim;
         public Rectangle enemyRect;
-        
+        public Player playerFunctions = new Player();
         public static List<Enemy> enemies = new List<Enemy>();
 
         public Enemy(Rectangle rectangle, float Speed)
@@ -90,17 +90,18 @@ namespace Chapter6Game.Content.Objects
         public Rectangle Body;
         public BlueEnemy(Rectangle rectangle, float Speed) :base(rectangle, Speed)
         {
-
+            speed = 2;
         }
         public override void Update(GameTime gameTime)
         {
 
 
-            // float distance = MathHelper.Distance(playerFunctions.position.X, Position.X);
-            //if (distance < 20)
-            //{
-            //    //add patrol logic
-            //}
+           float distance =   MathHelper.Distance(playerFunctions.position.X, Position.X);
+
+          if (distance < 20)
+            {
+                Position.X -= speed;
+            }
 
             base.Update(gameTime);
         }
