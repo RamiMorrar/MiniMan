@@ -11,6 +11,7 @@ namespace Chapter6Game.Content.Objects
         public int health = 3;
         public bool isCollidingside = false;
       public Rectangle playerRect;
+        public Rectangle fistRect;
         public Texture2D pixel;
         public Vector2 velocity;
         public Vector2 position;
@@ -43,7 +44,7 @@ namespace Chapter6Game.Content.Objects
         {
             
             playerRect = new Rectangle((int)position.X, (int)position.Y, 32, 40);
-          
+            fistRect = new Rectangle((int)position.X + 10, (int)position.Y, 0, 0);
         }
 
         public void HandleCollisions()

@@ -285,9 +285,26 @@ namespace Chapter6Game
 
                 if (Input.IsPressed(Keys.K) && punchDelay >= 0.65f)
                     {
+                    punchisActive = true;
                     punchDelay = 0;
                     AttackSound.Play();
-                    }
+                }
+                else
+                {
+                    punchisActive = false;
+                }
+               
+                
+                if (punchisActive)
+                {
+                    player.fistRect = new Rectangle((int)player.position.X+10 , (int)player.position.Y, 25, 20);
+                    Debug.WriteLine("Is Punch Acttive?: " + punchisActive + player.fistRect);
+                }
+                if (flip)
+                {
+                    player.fistRect = new Rectangle((int)player.position.X - 10, (int)player.position.Y, 25, 20);
+                }
+                
                 if (Input.IsPressed(Keys.K))
                 {
                     AnimState = 3;
@@ -299,7 +316,7 @@ namespace Chapter6Game
                     
                     }
 
-                    if (Input.IsPressed(Keys.A) && !player.isCollidingside)
+                    if (Input.IsPressed(Keys.A) && !player.isCollidingside && !playerisDead)
                     {
 
                         flip = true;
@@ -317,7 +334,7 @@ namespace Chapter6Game
                         player.anim = animations[0];
                     }
 
-                    if (Input.IsPressed(Keys.D) && !player.isCollidingside)
+                    if (Input.IsPressed(Keys.D) && !player.isCollidingside && !playerisDead)
                     {
 
                         flip = false;
@@ -348,7 +365,7 @@ namespace Chapter6Game
                     }
 
 
-                    particleEngine.EmitterLocation = new Vector2(player.position.X + 21, player.position.Y + 30);
+                    particleEngine.EmitterLoc = new Vector2(player.position.X + 21, player.position.Y + 30);
                     particleEngine.Update();
 
                     #region Controller Input
@@ -591,7 +608,7 @@ namespace Chapter6Game
             {
                 string gameOver = "Game Over";
                 
-                _spriteBatch.DrawString(font, gameOver, CameraPos, Color.Black);
+                _spriteBatch.DrawString(font, gameOver, CameraPos- new Vector2(10, 30 ), Color.Black);
             }
 
             if (playerWon)

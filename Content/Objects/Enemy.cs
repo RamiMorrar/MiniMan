@@ -19,7 +19,7 @@ namespace Chapter6Game.Content.Objects
         public float speed;
         public SpriteAnimation anim;
         public Rectangle enemyRect;
-        public Player playerFunctions = new Player();
+        public Player player = new Player();
         public static List<Enemy> enemies = new List<Enemy>();
 
         public Enemy(Rectangle rectangle, float Speed)
@@ -29,7 +29,7 @@ namespace Chapter6Game.Content.Objects
           
         }
 
-        public new virtual void Update (GameTime gameTime)
+        public virtual void Update (GameTime gameTime)
         {
             Position.Y += Gravity;
 
@@ -81,7 +81,12 @@ namespace Chapter6Game.Content.Objects
         }
       public override void Update(GameTime gameTime)
         {
-           
+            float distance = MathHelper.Distance(player.position.X, Position.X);
+
+            if (distance < 20)
+            {
+                Position.X -= speed;
+            }
         }
      
     }
@@ -98,7 +103,7 @@ namespace Chapter6Game.Content.Objects
         {
 
 
-           float distance =   MathHelper.Distance(playerFunctions.position.X, Position.X);
+           float distance =   MathHelper.Distance(player.position.X, Position.X);
 
           if (distance < 20)
             {
@@ -114,11 +119,11 @@ namespace Chapter6Game.Content.Objects
         {
 
         }
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
         }
-        public Vector2 Position;
+        
         public int health = 3;
         public Rectangle SwordAttack;
       
