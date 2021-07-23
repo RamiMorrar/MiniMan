@@ -18,6 +18,7 @@ namespace Chapter6Game.Content.Objects
         public float speed = 4;
         public float gravity = 2;
         
+        
         public SpriteAnimation anim;
        
         public Vector2 Velocity;
@@ -25,12 +26,8 @@ namespace Chapter6Game.Content.Objects
       
         public bool hasjumped =false;
 
-        private List<Enemy> enemies = new List<Enemy>();
-
         Terrain terrain = new Terrain();
-        RedEnemy enemyRed;
-        BlueEnemy enemyBlue;
-        SamuraiBoss boss;
+       
         public bool iscolliding = false;
        
       
@@ -49,13 +46,15 @@ namespace Chapter6Game.Content.Objects
 
         public void HandleCollisions()
         {
+
+           
             #region Terrain Collision
             if (playerRect.Intersects(terrain.collisionRect[0]))
             {
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-             //   Debug.WriteLine("Collision Found");
+             //  Debug.WriteLine("Collision Found");
             }
             else
             {
@@ -151,12 +150,7 @@ namespace Chapter6Game.Content.Objects
             }
             #endregion
 
-            //if (playerRect.Intersects(e.enemyRect))
-            //{
-            //    position.X -= 2;
-            //    position.Y += 2;
-            //    health--;
-            //}
+            
         }
         public void Update(GameTime gameTime)
         {

@@ -2,136 +2,130 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Timers;
 
 namespace Chapter6Game.Content.Objects
 {
-    public class Enemy
+
+    
+    public class RedEnemy
     {
-         
-        public float Gravity = 2;
+        
+      public Player player = new Player();
         public Vector2 Position;
-       public bool enemyFlip;
+        public float speed = 2;
+        public float gravity = 2;
+        public Rectangle mainBody, topofHead;
         Terrain terrain = new Terrain();
-
-        // public Player playerFunctions = new Player();
-        public float speed;
+        public bool isDead;
         public SpriteAnimation anim;
-        public Rectangle enemyRect;
-        public Player player = new Player();
-        public static List<Enemy> enemies = new List<Enemy>();
-
-        public Enemy(Rectangle rectangle, float Speed)
+        public bool ispatroling = false;
+        public RedEnemy()
         {
-            enemyRect = rectangle;
-            speed = Speed;
-          
+            Position = new Vector2(-300, 300);
+            
         }
-
-        public virtual void Update (GameTime gameTime)
+        public void initialize()
         {
-            Position.Y += Gravity;
-
-            HandleEnemyCollisions();
+            topofHead = new Rectangle((int)Position.X, (int)Position.Y -10, 30, 1);
+            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 44);
+            player.Initialize();
         }
+        public void Update(GameTime gameTime)
+        {
+           
+            float distance = MathHelper.Distance(player.position.X, Position.X);
 
-        public void HandleEnemyCollisions() {
-            if (enemyRect.Intersects(terrain.collisionRect[2]))
+           // Debug.WriteLine(mainBody);
+            if (distance > -100)
             {
-                Gravity = 0;
+                ispatroling = true;
+                Position.X -= speed;
             }
-            if (enemyRect.Intersects(terrain.collisionRect[1]))
+            mainBody.X = (int)Position.X;
+            mainBody.Y = (int)Position.Y;
+            topofHead.X = (int)Position.X;
+            topofHead.Y = (int)Position.Y;
+            if(mainBody.Intersects(player.playerRect))
             {
-                Gravity = 0;
+                player.health--;
+                Debug.WriteLine("Collision");
             }
-            if (enemyRect.Intersects(terrain.collisionRect[3]))
+            if (mainBody.Intersects(terrain.collisionRect[0]))
             {
-                Gravity = 0;
-            }
-            if (enemyRect.Intersects(terrain.collisionRect[4]))
-            {
-                Gravity = 0;
+
+                
+                gravity = 0;
             }
 
-            if (enemyRect.Intersects(terrain.collisionRect[0]))
+            else
             {
-                Gravity = 0;
+                gravity = 2;
             }
+            anim.Position = Position;
+            anim.Update(gameTime);
+            Position.Y += gravity;
         }
-
+        
     }
 
-    public class RedEnemy : Enemy
+    public class BlueEnemy
     {
-        public Rectangle topofHead;
-        
-        SpriteAnimation redAnim;
-        public RedEnemy(Rectangle rectangle, float Speed) :base(rectangle, Speed)
+        public Player player = new Player();
+        public Rectangle mainBody, topofHead;
+        Terrain terrain = new Terrain();
+        public Vector2 Position;
+        public bool Isdead = false;
+        public SpriteAnimation anim;
+        public float speed = 2;
+        public float gravity = 2;
+        public BlueEnemy()
         {
-            Position = new Vector2(200, 300);
-            enemyRect = new Rectangle((int)Position.X, (int)Position.Y,48,12 );
-            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 20, 44, 20);
-            redAnim = anim;
+            Position = new Vector2(400, 300);
+        }
+        public void initialize()
+        {
+            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 20, 10, 10);
+            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 48);
+        }
+        public void Update(GameTime gameTime)
+        {
+           
+            anim.Position = Position;
+            anim.Update(gameTime);
+            Position.Y += gravity;
+        }
+        
+    }
+
+    public class SamuraiBoss
+    {
+        public float gravity = 2;
+        public Player Player = new Player();
+        public bool isdead = false; 
+        Terrain terrain = new Terrain();
+        public int health = 3;
+        public SpriteAnimation anim;
+        public Vector2 Position;
+        public Rectangle mainBody, SamuraiSlash;
+        public SamuraiBoss()
+        {
+
+            Position = new Vector2(875, 254);
         }
         public void Initialize()
         {
-            
-            enemyRect = new Rectangle((int)Position.X, (int)Position.Y, 48, 33);
-        }
-      public override void Update(GameTime gameTime)
-        {
-            float distance = MathHelper.Distance(player.position.X, Position.X);
-
-            if (distance < 20)
-            {
-                Position.X -= speed;
-            }
-        }
-     
-    }
-
-    public class BlueEnemy : Enemy
-    {
-        
-        public Rectangle Body;
-        public BlueEnemy(Rectangle rectangle, float Speed) :base(rectangle, Speed)
-        {
-            speed = 2;
-        }
-        public override void Update(GameTime gameTime)
-        {
-
-
-           float distance =   MathHelper.Distance(player.position.X, Position.X);
-
-          if (distance < 20)
-            {
-                Position.X -= speed;
-            }
-
-            base.Update(gameTime);
-        }
-    }
-    public class SamuraiBoss : Enemy
-    {
-       public SamuraiBoss(Rectangle rectangle, float Speed) :base(rectangle,Speed)
-        {
 
         }
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-
+            anim.Position = Position;
+            anim.Update(gameTime);
+            Position.Y += gravity;
         }
         
-        public int health = 3;
-        public Rectangle SwordAttack;
-      
-        public void OnHit()
-        {
-
-        }
     }
-
 
 }

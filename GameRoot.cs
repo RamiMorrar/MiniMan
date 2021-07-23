@@ -23,14 +23,18 @@ namespace Chapter6Game
 
         OrthographicCamera camera;
 
+        
+
         bool playerisDead = false;
         bool punchisActive = false;
         bool playerWon = false;
 
-        ParticleEngine particleEngine; // Sets a class variable
+        ParticleEngine particleEngine;
 
-        public SamuraiBoss Samurai;
-        
+        public SamuraiBoss samurai = new SamuraiBoss();
+        public RedEnemy redEnemy = new RedEnemy();
+        public BlueEnemy blueEnemy = new BlueEnemy();
+
 
 
         InputManager Input;
@@ -40,13 +44,15 @@ namespace Chapter6Game
         // Put Camera at X: 745 when at end of level
         public Vector2 CameraPos;
         public Player player = new Player();
+        
+
         Terrain terrain = new Terrain();
         Coins coin;
 
         public SpriteFont font;
 
         bool flip = false;
-        public Enemy enemy;
+        
         bool paused = false;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -86,7 +92,7 @@ namespace Chapter6Game
         #region Audio
         SoundEffect jumpSnd, AttackSound, getHit, EnemyHitSound, CoinSnd, SamuraiSlash; 
         Song[] songs = new Song[4];
-            Song Menu, main, boss, endSong;
+            Song  main, endSong;
         
         #endregion
         public GameRoot()
@@ -104,12 +110,16 @@ namespace Chapter6Game
             this.Components.Add(Input);
             var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 360, 360);
             camera = new OrthographicCamera(viewportAdapter);
+
+           
+
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 800;
             _graphics.ApplyChanges();
             player.Initialize();
             terrain.Initialize();
             hearts.Initialize();
+            redEnemy.initialize();
             
 
 
@@ -189,7 +199,7 @@ namespace Chapter6Game
 
             // red enemy Animations
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
-            redAnimations[1] = new SpriteAnimation(patrol, 6, 2);
+            redAnimations[1] = new SpriteAnimation(patrol, 6, 5);
             redAnimations[2] = new SpriteAnimation(stomp, 2, 1);
             redAnimations[2].IsLooping = false;
 
@@ -209,6 +219,7 @@ namespace Chapter6Game
             player.anim = animations[0];
             coin.anim = coinAnims[0];
 
+            redEnemy.anim = redAnimations[0];
 
             font = Content.Load<SpriteFont>("Font");
 
@@ -231,8 +242,10 @@ namespace Chapter6Game
                 gameStarted = true;
                 MediaPlayer.Play(main);
             }
+
+            redEnemy.Update(gameTime);
             punchDelay += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Debug.WriteLine(punchDelay);
+            
             //   if (Samurai.health <= 0)
             //{
             //    MediaPlayer.Play(endSong);
@@ -279,8 +292,9 @@ namespace Chapter6Game
                         player.position.Y -= 14;
                         player.gravity = -7.5f;
                         player.hasjumped = true;
-                        Debug.WriteLine(AnimState);
-                    }
+                    Debug.WriteLine("Is Punch Acttive?: " + punchisActive + player.fistRect);
+                    //   Debug.WriteLine(AnimState);
+                }
                 
 
                 if (Input.IsPressed(Keys.K) && punchDelay >= 0.65f)
@@ -326,7 +340,7 @@ namespace Chapter6Game
                         hearts.Positions[0].X -= player.speed;
                         hearts.Positions[1].X -= player.speed;
                         hearts.Positions[2].X -= player.speed;
-                        Debug.WriteLine(AnimState);
+                        
                     }
                     else
                     {
@@ -351,7 +365,8 @@ namespace Chapter6Game
                     }
 
                     HandleAnimationCollsions();
-                    #endregion
+                #endregion
+                
                     if (!paused)
                     {
 
@@ -408,13 +423,13 @@ namespace Chapter6Game
                             hearts.Positions[0].X -= player.speed;
                             hearts.Positions[1].X -= player.speed;
                             hearts.Positions[2].X -= player.speed;
-                            Debug.WriteLine("Animation Position: " + player.anim.Position);
+                         //   Debug.WriteLine("Animation Position: " + player.anim.Position);
                         }
 
 
                         if (state.IsButtonDown(Buttons.DPadRight) && !player.isCollidingside)
                         {
-                            Debug.WriteLine(AnimState);
+                        
                             flip = false;
                             AnimState = 1;
                             player.position.X += player.speed;
@@ -513,13 +528,15 @@ namespace Chapter6Game
                 
                 coin.anim = coinAnims[1];
             }
-            //if (player.playerRect.Intersects(enemy.enemyRect))
-            //{
-            //    player.anim = animations[4];
-            //}
+            
             else
             {
                 player.anim = animations[0];
+            }
+
+            if (redEnemy.ispatroling == true)
+            {
+                redEnemy.anim = redAnimations[1];
             }
         }
 
@@ -553,9 +570,7 @@ namespace Chapter6Game
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var transFormMatrix = camera.GetViewMatrix();
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: transFormMatrix);
-            //samurai.Update(gameTime);
-            //redEnemy.Update(gameTime);
-            //blueEnemy.Update(gameTime);
+           
 
             if (gameStarted)
             {
@@ -575,6 +590,7 @@ namespace Chapter6Game
                     particleEngine.Draw(_spriteBatch);
                 }
 
+                redEnemy.anim.Draw(_spriteBatch, SpriteEffects.None);
                 if (flip)
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.FlipHorizontally);
@@ -584,6 +600,8 @@ namespace Chapter6Game
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.None);
                 }
+
+                
 
                 coin.anim.Draw(_spriteBatch, SpriteEffects.None);
                 hearts.Draw(_spriteBatch);
@@ -606,9 +624,14 @@ namespace Chapter6Game
 
             if (playerisDead)
             {
+                MediaPlayer.Stop();
+
+                MediaPlayer.Play(endSong);
                 string gameOver = "Game Over";
-                
+               
                 _spriteBatch.DrawString(font, gameOver, CameraPos- new Vector2(10, 30 ), Color.Black);
+
+                
             }
 
             if (playerWon)
