@@ -46,7 +46,7 @@ namespace MiniMan.Content.Objects
                 batch.Draw(emptyHeart,Positions[2], Color.White);
             }
 
-            else if (player.health == 0)
+            else if (player.health <= 0)
             {
                 
                     batch.Draw(emptyHeart, Positions[0], Color.White);

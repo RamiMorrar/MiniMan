@@ -22,7 +22,7 @@ namespace Chapter6Game.Content.Objects
         public bool isDead;
         public SpriteAnimation anim;
         public bool ispatroling = false;
-        public RedEnemy()
+        public RedEnemy(GameRoot root)
         {
             Position = new Vector2(-300, 300);
             
@@ -35,10 +35,8 @@ namespace Chapter6Game.Content.Objects
         }
         public void Update(GameTime gameTime)
         {
-           
+          // Calculates the distance betweeen player and Enemy
             float distance = MathHelper.Distance(player.position.X, Position.X);
-
-           // Debug.WriteLine(mainBody);
             if (distance > -100)
             {
                 ispatroling = true;
@@ -81,7 +79,7 @@ namespace Chapter6Game.Content.Objects
         public SpriteAnimation anim;
         public float speed = 2;
         public float gravity = 2;
-        public BlueEnemy()
+        public BlueEnemy(GameRoot root)
         {
             Position = new Vector2(400, 300);
         }
@@ -110,14 +108,15 @@ namespace Chapter6Game.Content.Objects
         public SpriteAnimation anim;
         public Vector2 Position;
         public Rectangle mainBody, SamuraiSlash;
-        public SamuraiBoss()
+        public SamuraiBoss(GameRoot root)
         {
 
             Position = new Vector2(875, 254);
         }
         public void Initialize()
         {
-
+            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 48);
+            SamuraiSlash = new Rectangle((int)Position.X - 10, (int)Position.Y, 20, 15);
         }
         public void Update(GameTime gameTime)
         {

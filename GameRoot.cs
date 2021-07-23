@@ -31,9 +31,9 @@ namespace Chapter6Game
 
         ParticleEngine particleEngine;
 
-        public SamuraiBoss samurai = new SamuraiBoss();
-        public RedEnemy redEnemy = new RedEnemy();
-        public BlueEnemy blueEnemy = new BlueEnemy();
+        public SamuraiBoss samurai;
+        public RedEnemy redEnemy;
+        public BlueEnemy blueEnemy;
 
 
 
@@ -102,7 +102,9 @@ namespace Chapter6Game
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             coin = new Coins(this);
-            
+            redEnemy = new RedEnemy(this);
+            blueEnemy = new BlueEnemy(this);
+            samurai = new SamuraiBoss(this);
         }
 
         protected override void Initialize()
@@ -120,7 +122,8 @@ namespace Chapter6Game
             terrain.Initialize();
             hearts.Initialize();
             redEnemy.initialize();
-            
+            blueEnemy.initialize();
+            samurai.Initialize();
 
 
 
@@ -201,6 +204,7 @@ namespace Chapter6Game
             redAnimations[0] = new SpriteAnimation(Redidle, 2, 2);
             redAnimations[1] = new SpriteAnimation(patrol, 6, 5);
             redAnimations[2] = new SpriteAnimation(stomp, 2, 1);
+
             redAnimations[2].IsLooping = false;
 
             // blue Animation
@@ -220,7 +224,8 @@ namespace Chapter6Game
             coin.anim = coinAnims[0];
 
             redEnemy.anim = redAnimations[0];
-
+            blueEnemy.anim = blueAnimations[0];
+            samurai.anim = samuraiAnimations[0];
             font = Content.Load<SpriteFont>("Font");
 
             background = Content.Load<Texture2D>("Terrain/Sky");
@@ -243,7 +248,7 @@ namespace Chapter6Game
                 MediaPlayer.Play(main);
             }
 
-            redEnemy.Update(gameTime);
+            
             punchDelay += (float)gameTime.ElapsedGameTime.TotalSeconds;
             
             //   if (Samurai.health <= 0)
@@ -272,8 +277,9 @@ namespace Chapter6Game
                     }
 
                 #endregion
-
-               
+                redEnemy.Update(gameTime);
+                blueEnemy.Update(gameTime);
+                samurai.Update(gameTime);
 
                 if (player.position.Y > 450 || player.health <= 0)
                 {
@@ -318,6 +324,10 @@ namespace Chapter6Game
                 {
                     player.fistRect = new Rectangle((int)player.position.X - 10, (int)player.position.Y, 25, 20);
                 }
+                else
+                {
+                    player.fistRect = new Rectangle((int)player.position.X - 10, (int)player.position.Y, 0, 0);
+                }
                 
                 if (Input.IsPressed(Keys.K))
                 {
@@ -336,11 +346,15 @@ namespace Chapter6Game
                         flip = true;
                         AnimState = 1;
                         player.position.X -= player.speed;
+
+                    if (player.position.X < 745)
+                    {
                         CameraPos.X -= player.speed;
+
                         hearts.Positions[0].X -= player.speed;
                         hearts.Positions[1].X -= player.speed;
                         hearts.Positions[2].X -= player.speed;
-                        
+                    }
                     }
                     else
                     {
@@ -348,23 +362,27 @@ namespace Chapter6Game
                         player.anim = animations[0];
                     }
 
-                    if (Input.IsPressed(Keys.D) && !player.isCollidingside && !playerisDead)
+                if (Input.IsPressed(Keys.D) && !player.isCollidingside && !playerisDead)
+                {
+                    player.position.X = player.position.X + player.speed;
+                    flip = false;
+                    if (player.position.X < 745)
                     {
-
-                        flip = false;
                         CameraPos.X += player.speed;
-                        player.position.X = player.position.X + player.speed;
+
+
                         hearts.Positions[0].X += player.speed;
                         hearts.Positions[1].X += player.speed;
                         hearts.Positions[2].X += player.speed;
                         AnimState = 1;
                     }
-                    else
-                    {
+                }
+                else
+                {
 
-                    }
+                }
 
-                    HandleAnimationCollsions();
+                    HandleAnimationCollisions();
                 #endregion
                 
                     if (!paused)
@@ -520,8 +538,26 @@ namespace Chapter6Game
             }
         }
         #endregion
-        public void HandleAnimationCollsions()
+        public void HandleAnimationCollisions()
         {
+            if (player.playerRect.Intersects(redEnemy.mainBody))
+            {
+                Debug.WriteLine("collision");
+
+              //  player.health--;
+                //player.anim = animations[4];
+                EnemyHitSound.Play();
+            }
+            if(player.playerRect.Intersects(redEnemy.topofHead) && player.hasjumped)
+            {
+                redEnemy.anim = redAnimations[2];
+                redEnemy.speed = 0;
+            }
+
+            else
+            {
+
+            }
             if (coin.BoundingCircle.Intersects(player.playerRect))
             {
                 CoinSnd.Play();
@@ -562,6 +598,8 @@ namespace Chapter6Game
                     player.anim = animations[0];
                     break;
             }
+
+            
         }
 
 
@@ -589,7 +627,8 @@ namespace Chapter6Game
                 {
                     particleEngine.Draw(_spriteBatch);
                 }
-
+                samurai.anim.Draw(_spriteBatch, SpriteEffects.None);
+                blueEnemy.anim.Draw(_spriteBatch, SpriteEffects.None);
                 redEnemy.anim.Draw(_spriteBatch, SpriteEffects.None);
                 if (flip)
                 {
@@ -618,7 +657,7 @@ namespace Chapter6Game
                 _spriteBatch.DrawString(font, startText, new Vector2(115, 220), Color.Black);
 
             }
-           
+          
            
 
 
@@ -640,12 +679,13 @@ namespace Chapter6Game
                 _spriteBatch.DrawString(font, Won, CameraPos, Color.Black);
             }
 
-           //if (samurai.health <= 0)
-           // {
-           //     string conText = "Congrats, you won!";
+          if  (samurai.health <= 0)
+           {
+                string conText = "Congrats, you won!";
 
-           //     _spriteBatch.DrawString(font, conText, CameraPos, Color.Black);
-           // }
+               _spriteBatch.DrawString(font, conText, CameraPos, Color.Black);
+           }
+
             _spriteBatch.End();
 
             base.Draw(gameTime);
