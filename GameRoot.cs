@@ -245,7 +245,7 @@ namespace Chapter6Game
             if (Keyboard.GetState().IsKeyDown(Keys.Enter))
             {
                 gameStarted = true;
-                MediaPlayer.Play(main);
+           //     MediaPlayer.Play(main);
             }
 
             
@@ -345,7 +345,16 @@ namespace Chapter6Game
 
                         flip = true;
                         AnimState = 1;
-                        player.position.X -= player.speed;
+                    player.position.X -= player.speed;
+
+                    
+
+                   
+
+
+                    Debug.WriteLine(player.position);
+                  
+                    
 
                     if (player.position.X < 745)
                     {
@@ -546,12 +555,21 @@ namespace Chapter6Game
 
               //  player.health--;
                 //player.anim = animations[4];
-                EnemyHitSound.Play();
+               
             }
             if(player.playerRect.Intersects(redEnemy.topofHead) && player.hasjumped)
             {
+
+                // Makes all of the enemies' rect properties 0 to prevent continuous sound calls
+                EnemyHitSound.Play();
+                redEnemy.mainBody.Height = 0;
+                redEnemy.mainBody.Width = 0;
+                redEnemy.topofHead.Width = 0;
+                redEnemy.topofHead.Height = 0;
+
                 redEnemy.anim = redAnimations[2];
                 redEnemy.speed = 0;
+                
             }
 
             else

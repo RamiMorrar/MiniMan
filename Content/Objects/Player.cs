@@ -47,7 +47,7 @@ namespace Chapter6Game.Content.Objects
         public void HandleCollisions()
         {
 
-           
+        
             #region Terrain Collision
             if (playerRect.Intersects(terrain.collisionRect[0]))
             {
@@ -160,7 +160,7 @@ namespace Chapter6Game.Content.Objects
             playerRect.Y = (int)position.Y;
             HandleCollisions();
            //Gravity Logic
-              position.Y += gravity;
+             position.Y += gravity;
            
             if (hasjumped)
             {
