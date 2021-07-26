@@ -39,6 +39,11 @@ namespace Chapter6Game
 
         InputManager Input;
         GamePadCapabilities capabilities = GamePad.GetCapabilities(PlayerIndex.One);
+
+        GamePadCapabilities[] controllers = new GamePadCapabilities[4];
+
+        
+        
         float punchDelay = 0;
 
         // Put Camera at X: 745 when at end of level
@@ -247,7 +252,7 @@ namespace Chapter6Game
                 gameStarted = true;
            //     MediaPlayer.Play(main);
             }
-
+            
             
             punchDelay += (float)gameTime.ElapsedGameTime.TotalSeconds;
             
@@ -260,9 +265,12 @@ namespace Chapter6Game
                 if (gameStarted)
                 {
 
-                    #region Pausing
+                #region Pausing
+                redEnemy.Update(gameTime);
+                blueEnemy.Update(gameTime);
+                samurai.Update(gameTime);
 
-                    if (!paused)
+                if (!paused)
                     {
                         camera.LookAt(CameraPos);
                     }
@@ -631,7 +639,9 @@ namespace Chapter6Game
             if (gameStarted)
             {
                 #region Textures and Shader
-                effect.CurrentTechnique.Passes[0].Apply();
+
+               // effect.CurrentTechnique.Passes[0].Apply();
+
                 _spriteBatch.Draw(background, new Vector2(-1413, 50), Color.White);
                 _spriteBatch.Draw(background, new Vector2(-942, 50), Color.White);
                 _spriteBatch.Draw(background, new Vector2(-471, 50), Color.White);
@@ -681,14 +691,11 @@ namespace Chapter6Game
 
             if (playerisDead)
             {
-                MediaPlayer.Stop();
-
+               
                 MediaPlayer.Play(endSong);
                 string gameOver = "Game Over";
                
                 _spriteBatch.DrawString(font, gameOver, CameraPos- new Vector2(10, 30 ), Color.Black);
-
-                
             }
 
             if (playerWon)

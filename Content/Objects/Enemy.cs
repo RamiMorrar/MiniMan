@@ -14,34 +14,68 @@ namespace Chapter6Game.Content.Objects
     {
         
       public Player player = new Player();
-        public Vector2 Position;
-        public float speed = 2;
-        public float gravity = 2;
+        public Vector2 Position, origin;
+        public float speed = 0.5f;
+        public float gravity ;
         public Rectangle mainBody, topofHead;
+        float[] xcoords = new float[4];
+        float[] ycoords = new float[4]; 
         Terrain terrain = new Terrain();
         public bool isDead;
         public SpriteAnimation anim;
         public bool ispatroling = false;
         public RedEnemy(GameRoot root)
         {
-            Position = new Vector2(-300, 300);
-            
+            Position = new Vector2(-500, 350);
+            origin = new Vector2(-500, 350);
         }
         public void initialize()
         {
             topofHead = new Rectangle((int)Position.X, (int)Position.Y -10, 30, 1);
             mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 44);
+
+            xcoords[0] = origin.X - 100;
             player.Initialize();
         }
         public void Update(GameTime gameTime)
         {
-          // Calculates the distance betweeen player and Enemy
+            // SinuSoid Motion
+            //Enemy.pos.X -= Enemy.speed;
+            // Enemy.pos.Y = (float)MathF.Sin((float)gameTime.TotalGameTime.TotalMilliseconds / 100);
+
+            // Circular Motion
+            //Position.X -= (float)MathF.Cos((float)gameTime.TotalGameTime.TotalMilliseconds / 900) * speed;
+            //Position.Y += (float)MathF.Sin((float)gameTime.TotalGameTime.TotalMilliseconds / 900) * speed;
+
+
+
+
+            // Calculates the distance betweeen player and Enemy
             float distance = MathHelper.Distance(player.position.X, Position.X);
-            if (distance > -100)
+
+            
+            float distancebtwnX = MathHelper.Distance(Position.X, origin.X);
+            float distancebtwnY = MathHelper.Distance(Position.Y, origin.Y);
+            Debug.WriteLine(distancebtwnX);
+             if (distancebtwnX < 100)
             {
-                ispatroling = true;
                 Position.X -= speed;
             }
+
+          else  if (distancebtwnX >= 100){
+                Position.Y -= speed + 2;
+                Position.X -= 0;
+            }
+           
+            //if (distance > -100)
+            //{
+            //    ispatroling = true;
+            //    Position.X -= speed;
+                
+            //    Debug.WriteLine(Position);
+            //}  
+
+
             mainBody.X = (int)Position.X;
             mainBody.Y = (int)Position.Y;
             topofHead.X = (int)Position.X;
@@ -60,11 +94,16 @@ namespace Chapter6Game.Content.Objects
 
             else
             {
-                gravity = 2;
+               gravity = 2;
+            }
+
+            if (topofHead.Intersects(player.playerRect ) && player.hasjumped)
+            {
+                gravity = 0;
             }
             anim.Position = Position;
             anim.Update(gameTime);
-            Position.Y += gravity;
+           Position.Y += gravity;
         }
         
     }
