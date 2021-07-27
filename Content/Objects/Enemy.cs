@@ -16,10 +16,9 @@ namespace Chapter6Game.Content.Objects
       public Player player = new Player();
         public Vector2 Position, origin;
         public float speed = 0.5f;
-        public float gravity ;
+        public float gravity;
         public Rectangle mainBody, topofHead;
-        float[] xcoords = new float[4];
-        float[] ycoords = new float[4]; 
+        
         Terrain terrain = new Terrain();
         public bool isDead;
         public SpriteAnimation anim;
@@ -27,18 +26,21 @@ namespace Chapter6Game.Content.Objects
         public RedEnemy(GameRoot root)
         {
             Position = new Vector2(-500, 350);
-            origin = new Vector2(-500, 350);
+         //   origin = new Vector2(-500, 350);
         }
         public void initialize()
         {
             topofHead = new Rectangle((int)Position.X, (int)Position.Y -10, 30, 1);
             mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 44);
 
-            xcoords[0] = origin.X - 100;
+           
             player.Initialize();
         }
         public void Update(GameTime gameTime)
         {
+            
+            // Every function talked about in the book
+
             // SinuSoid Motion
             //Enemy.pos.X -= Enemy.speed;
             // Enemy.pos.Y = (float)MathF.Sin((float)gameTime.TotalGameTime.TotalMilliseconds / 100);
@@ -51,29 +53,40 @@ namespace Chapter6Game.Content.Objects
 
 
             // Calculates the distance betweeen player and Enemy
-            float distance = MathHelper.Distance(player.position.X, Position.X);
+            float distance = MathHelper.Distance(player.position.X, Position.X) / (float)gameTime.TotalGameTime.TotalSeconds + 10;
+            // Debug.WriteLine(distance);
 
-            
-            float distancebtwnX = MathHelper.Distance(Position.X, origin.X);
-            float distancebtwnY = MathHelper.Distance(Position.Y, origin.Y);
-            Debug.WriteLine(distancebtwnX);
-             if (distancebtwnX < 100)
-            {
-                Position.X -= speed;
-            }
 
-          else  if (distancebtwnX >= 100){
-                Position.Y -= speed + 2;
-                Position.X -= 0;
-            }
-           
-            //if (distance > -100)
-            //{
-            //    ispatroling = true;
+            ////Non-Linear Movement Script That makes a staircase motion
+            ///
+            //float distancebtwnX = MathHelper.Distance(Position.X, origin.X);
+            //float distancebtwnY = MathHelper.Distance(Position.Y, origin.Y) ;
+            //Debug.WriteLine(distancebtwnX);
+            //  Debug.WriteLine(distancebtwnY);
+            //if (distancebtwnX <= 100) 
             //    Position.X -= speed;
-                
-            //    Debug.WriteLine(Position);
-            //}  
+
+            //else if (distancebtwnY <= 200)
+            //{
+            //    Position.Y -= speed + 2;
+            //    Debug.WriteLine("Go Up");
+            //} else if (distancebtwnY >= 199)
+            //{
+
+            //    Position.X -= speed + 2;
+            //    Debug.WriteLine("Go Left Again");
+
+            //}
+
+
+
+            //Regular Movement
+            if (distance <= 100)
+            {
+                ispatroling = true;
+                Position.X -= speed;
+                Debug.WriteLine(Position);
+            }
 
 
             mainBody.X = (int)Position.X;
@@ -87,8 +100,6 @@ namespace Chapter6Game.Content.Objects
             }
             if (mainBody.Intersects(terrain.collisionRect[0]))
             {
-
-                
                 gravity = 0;
             }
 
@@ -97,7 +108,7 @@ namespace Chapter6Game.Content.Objects
                gravity = 2;
             }
 
-            if (topofHead.Intersects(player.playerRect ) && player.hasjumped)
+            if (topofHead.Intersects(player.playerRect) && player.hasjumped)
             {
                 gravity = 0;
             }
@@ -114,27 +125,78 @@ namespace Chapter6Game.Content.Objects
         public Rectangle mainBody, topofHead;
         Terrain terrain = new Terrain();
         public Vector2 Position;
-        public bool Isdead = false;
+        public bool IsPatrolling = false;
         public SpriteAnimation anim;
-        public float speed = 2;
+        public float speed = 1;
         public float gravity = 2;
         public BlueEnemy(GameRoot root)
         {
-            Position = new Vector2(400, 300);
+            Position = new Vector2(100, 200);
         }
         public void initialize()
         {
-            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 20, 10, 10);
-            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 48);
+            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 20, 20, 20);
+            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 46);
         }
         public void Update(GameTime gameTime)
         {
+            float distance = MathHelper.Distance(player.position.X, Position.X) / (float)gameTime.TotalGameTime.TotalSeconds + 50;
+
+            if (distance <= 10)
+            {
+                IsPatrolling = true;
+                Position.X -= speed;
+            }
+
            
+            initialize();
+
+            //mainBody.X = (int)Position.X;
+            //mainBody.Y = (int)Position.Y;
+            //topofHead.X = (int)Position.X;
+            //topofHead.Y = (int)Position.Y;
+
             anim.Position = Position;
             anim.Update(gameTime);
             Position.Y += gravity;
+
+            HandleCollisions();
+           
         }
-        
+        public void HandleCollisions()
+        {
+            if (mainBody.Intersects(player.fistRect))
+            {
+                Debug.WriteLine("hit!");
+                mainBody = new Rectangle((int)Position.X,(int) Position.Y, 0, 0);
+            }
+            if (mainBody.Intersects(terrain.collisionRect[4]))
+            {
+                gravity = 0;
+            }
+            if (mainBody.Intersects(terrain.collisionRect[0]))
+            {
+                gravity = 0;
+            }
+            if (mainBody.Intersects(terrain.collisionRect[3]))
+            {
+                gravity = 0;
+            }
+            if (mainBody.Intersects(terrain.collisionRect[5]))
+            {
+                gravity = 0;
+            }
+            if (mainBody.Intersects(terrain.collisionRect[2]))
+            {
+                gravity = 0;
+            }
+            if (topofHead.Intersects(player.playerRect))
+            {
+                player.health -= 1;
+                player.position.X -= 2;
+                player.position.Y -= 3;
+            }
+        }
     }
 
     public class SamuraiBoss

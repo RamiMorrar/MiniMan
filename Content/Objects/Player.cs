@@ -167,15 +167,6 @@ namespace Chapter6Game.Content.Objects
                 float i = 1;
                 gravity += 0.15f * i;
             }
-
-
-
-           
-            
-
-            
-
-            
             
         }
 

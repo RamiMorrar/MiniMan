@@ -600,6 +600,10 @@ namespace Chapter6Game
             {
                 redEnemy.anim = redAnimations[1];
             }
+            if (blueEnemy.IsPatrolling == true)
+            {
+                redEnemy.anim = redAnimations[1];
+            }
         }
 
 
@@ -661,15 +665,11 @@ namespace Chapter6Game
                 if (flip)
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.FlipHorizontally);
-
                 }
                 else
                 {
                     player.anim.Draw(_spriteBatch, SpriteEffects.None);
                 }
-
-                
-
                 coin.anim.Draw(_spriteBatch, SpriteEffects.None);
                 hearts.Draw(_spriteBatch);
             }
