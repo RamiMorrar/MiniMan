@@ -85,7 +85,7 @@ namespace Chapter6Game.Content.Objects
             {
                 ispatroling = true;
                 Position.X -= speed;
-                Debug.WriteLine(Position);
+                
             }
 
 
@@ -110,6 +110,8 @@ namespace Chapter6Game.Content.Objects
 
             if (topofHead.Intersects(player.playerRect) && player.hasjumped)
             {
+                
+                
                 gravity = 0;
             }
             anim.Position = Position;
@@ -126,12 +128,13 @@ namespace Chapter6Game.Content.Objects
         Terrain terrain = new Terrain();
         public Vector2 Position;
         public bool IsPatrolling = false;
+        public bool ishit = false;
         public SpriteAnimation anim;
         public float speed = 1;
         public float gravity = 2;
         public BlueEnemy(GameRoot root)
         {
-            Position = new Vector2(100, 200);
+            Position = new Vector2(500, -200);
         }
         public void initialize()
         {
@@ -140,17 +143,17 @@ namespace Chapter6Game.Content.Objects
         }
         public void Update(GameTime gameTime)
         {
-            float distance = MathHelper.Distance(player.position.X, Position.X) / (float)gameTime.TotalGameTime.TotalSeconds + 50;
-
-            if (distance <= 10)
+            float distance = MathHelper.Distance(player.position.X, Position.X) - (float)gameTime.TotalGameTime.TotalSeconds -775;
+          //  Debug.WriteLine(distance);
+            if (distance <= 700)
             {
                 IsPatrolling = true;
-                Position.X -= speed;
+                Position.X -= 0.5f;
             }
 
            
             initialize();
-
+           
             //mainBody.X = (int)Position.X;
             //mainBody.Y = (int)Position.Y;
             //topofHead.X = (int)Position.X;
@@ -168,24 +171,26 @@ namespace Chapter6Game.Content.Objects
             if (mainBody.Intersects(player.fistRect))
             {
                 Debug.WriteLine("hit!");
-                mainBody = new Rectangle((int)Position.X,(int) Position.Y, 0, 0);
+                mainBody = new Rectangle((int)Position.X,(int) Position.Y , 0, 0);
             }
             if (mainBody.Intersects(terrain.collisionRect[4]))
             {
                 gravity = 0;
             }
+            else
+            {
+                gravity = 2;
+            }
             if (mainBody.Intersects(terrain.collisionRect[0]))
             {
                 gravity = 0;
             }
+           
             if (mainBody.Intersects(terrain.collisionRect[3]))
             {
                 gravity = 0;
             }
-            if (mainBody.Intersects(terrain.collisionRect[5]))
-            {
-                gravity = 0;
-            }
+            
             if (mainBody.Intersects(terrain.collisionRect[2]))
             {
                 gravity = 0;
@@ -195,6 +200,13 @@ namespace Chapter6Game.Content.Objects
                 player.health -= 1;
                 player.position.X -= 2;
                 player.position.Y -= 3;
+            }
+            if (mainBody.Intersects(player.fistRect))
+            {
+                
+                ishit = true;
+                mainBody.Height = 0;
+                mainBody.Width = 0;
             }
         }
     }

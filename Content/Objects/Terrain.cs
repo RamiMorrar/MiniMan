@@ -15,11 +15,11 @@ namespace Chapter6Game.Content.Objects
         {
             Position = new Vector2(-300, 250);
             // All Ground Collision
-            collisionRect[0] = new Rectangle(-800, 410, 475, 48);
+            collisionRect[0] = new Rectangle(-800, 410, 475, 1);
             collisionRect[1] = new Rectangle(-418, 358, 40, 50);
             collisionRect[2] = new Rectangle(-250, 350, 10, 150);
             collisionRect[3] = new Rectangle(-95, 410, 104, 150);
-            collisionRect[4] = new Rectangle(60, 412, 500, 150);
+            collisionRect[4] = new Rectangle(60, 412, 600, 160);
             collisionRect[5] = new Rectangle(575, 290, 340, 150);
             collisionRect[6] = new Rectangle(165, 360, 50, 20);
             collisionRect[7] = new Rectangle(300, 360, 50, 20);

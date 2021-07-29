@@ -215,7 +215,7 @@ namespace Chapter6Game
             // blue Animation
             blueAnimations[0] = new SpriteAnimation(BlueIdle, 2, 2);
             blueAnimations[1] = new SpriteAnimation(Bluepatrol, 6, 2);
-            blueAnimations[2] = new SpriteAnimation(blueHit, 2, 1);
+            blueAnimations[2] = new SpriteAnimation(blueHit, 2, 2);
             blueAnimations[2].IsLooping = false;
 
             // Samurai Animation
@@ -229,7 +229,9 @@ namespace Chapter6Game
             coin.anim = coinAnims[0];
 
             redEnemy.anim = redAnimations[0];
-            blueEnemy.anim = blueAnimations[0];
+            blueEnemy.anim = redAnimations[0];
+
+
             samurai.anim = samuraiAnimations[0];
             font = Content.Load<SpriteFont>("Font");
 
@@ -326,15 +328,16 @@ namespace Chapter6Game
                 if (punchisActive)
                 {
                     player.fistRect = new Rectangle((int)player.position.X+10 , (int)player.position.Y, 25, 20);
-                    Debug.WriteLine("Is Punch Acttive?: " + punchisActive + player.fistRect);
+                    Debug.WriteLine("Is Punch Active?: " + punchisActive + player.fistRect);
+                    
                 }
                 if (flip)
                 {
-                    player.fistRect = new Rectangle((int)player.position.X - 10, (int)player.position.Y, 25, 20);
+                    player.fistRect = new Rectangle((int)player.position.X - 10, (int)player.position.Y, 0, 0);
                 }
                 else
                 {
-                    player.fistRect = new Rectangle((int)player.position.X - 10, (int)player.position.Y, 0, 0);
+                    player.fistRect = new Rectangle((int)player.position.X + 20, (int)player.position.Y, 0, 0);
                 }
                 
                 if (Input.IsPressed(Keys.K))
@@ -356,14 +359,6 @@ namespace Chapter6Game
                     player.position.X -= player.speed;
 
                     
-
-                   
-
-
-                    Debug.WriteLine(player.position);
-                  
-                    
-
                     if (player.position.X < 745)
                     {
                         CameraPos.X -= player.speed;
@@ -560,11 +555,20 @@ namespace Chapter6Game
             if (player.playerRect.Intersects(redEnemy.mainBody))
             {
                 Debug.WriteLine("collision");
-
-              //  player.health--;
+                getHit.Play();
+                //  player.health--;
                 //player.anim = animations[4];
+
+            }
+
+            if (player.playerRect.Intersects(blueEnemy.topofHead))
+            {
+                //player.health--;
+                player.position.X -= player.speed * 1.5f;
+                getHit.Play();
                
             }
+
             if(player.playerRect.Intersects(redEnemy.topofHead) && player.hasjumped)
             {
 
@@ -574,16 +578,23 @@ namespace Chapter6Game
                 redEnemy.mainBody.Width = 0;
                 redEnemy.topofHead.Width = 0;
                 redEnemy.topofHead.Height = 0;
-
+                player.position.Y -= player.speed * 6;
                 redEnemy.anim = redAnimations[2];
                 redEnemy.speed = 0;
                 
             }
-
-            else
+            if (player.fistRect.Intersects(blueEnemy.mainBody) && Input.IsPressed(Keys.K))
             {
-
+               // Debug.WriteLine("fist");
+               EnemyHitSound.Play();
+                blueEnemy.ishit = true; 
+                blueEnemy.speed = 0;
+                player.fistRect.Width = 0;
+                player.fistRect.Height = 0;
             }
+
+          
+            
             if (coin.BoundingCircle.Intersects(player.playerRect))
             {
                 CoinSnd.Play();
@@ -595,14 +606,19 @@ namespace Chapter6Game
             {
                 player.anim = animations[0];
             }
+          
 
-            if (redEnemy.ispatroling == true)
+            if (redEnemy.ispatroling)
             {
                 redEnemy.anim = redAnimations[1];
             }
-            if (blueEnemy.IsPatrolling == true)
+            if (blueEnemy.IsPatrolling)
             {
-                redEnemy.anim = redAnimations[1];
+                blueEnemy.anim = blueAnimations[1];
+            }
+            if (blueEnemy.ishit) 
+            {
+                blueEnemy.anim = blueAnimations[2];
             }
         }
 
@@ -660,7 +676,10 @@ namespace Chapter6Game
                     particleEngine.Draw(_spriteBatch);
                 }
                 samurai.anim.Draw(_spriteBatch, SpriteEffects.None);
-                blueEnemy.anim.Draw(_spriteBatch, SpriteEffects.None);
+                if (!blueEnemy.ishit)
+                {
+                    blueEnemy.anim.Draw(_spriteBatch, SpriteEffects.None);
+                }
                 redEnemy.anim.Draw(_spriteBatch, SpriteEffects.None);
                 if (flip)
                 {
