@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using Chapter6Game;
 using System.Collections.Generic;
+using System;
 
 namespace Chapter6Game.Content.Objects
 {  public class Player
@@ -41,7 +42,7 @@ namespace Chapter6Game.Content.Objects
         {
             
             playerRect = new Rectangle((int)position.X, (int)position.Y, 32, 40);
-            fistRect = new Rectangle((int)position.X + 10, (int)position.Y, 0, 0);
+            fistRect = new Rectangle(0, 0, 0, 0);
         }
 
         public void HandleCollisions()
@@ -66,21 +67,21 @@ namespace Chapter6Game.Content.Objects
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-                //   Debug.WriteLine("Collision Found");
+              
             }
             if (playerRect.Intersects(terrain.collisionRect[2]))
             {
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-          //Debug.WriteLine("Collision Found");
+         
             }
             if (playerRect.Intersects(terrain.collisionRect[3]))
             {
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-           //     Debug.WriteLine("Collision Found");
+          
             }
             if (playerRect.Intersects(terrain.collisionRect[4]))
             {
@@ -118,7 +119,7 @@ namespace Chapter6Game.Content.Objects
                 gravity = 0;
                 hasjumped = false;
                 iscolliding = true;
-         
+                Debug.WriteLine("Last Platform");
             }
 
 
@@ -154,6 +155,8 @@ namespace Chapter6Game.Content.Objects
         }
         public void Update(GameTime gameTime)
         {
+
+            Initialize();
             anim.Position = position;  
             anim.Update(gameTime);
             playerRect.X = (int)position.X;

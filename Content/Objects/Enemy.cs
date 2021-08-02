@@ -12,9 +12,9 @@ namespace Chapter6Game.Content.Objects
     
     public class RedEnemy
     {
-        
+     
       public Player player = new Player();
-        public Vector2 Position, origin;
+        public Vector2 Position;
         public float speed = 0.5f;
         public float gravity;
         public Rectangle mainBody, topofHead;
@@ -26,7 +26,7 @@ namespace Chapter6Game.Content.Objects
         public RedEnemy(GameRoot root)
         {
             Position = new Vector2(-500, 350);
-         //   origin = new Vector2(-500, 350);
+         
         }
         public void initialize()
         {
@@ -132,14 +132,16 @@ namespace Chapter6Game.Content.Objects
         public SpriteAnimation anim;
         public float speed = 1;
         public float gravity = 2;
+        
         public BlueEnemy(GameRoot root)
         {
             Position = new Vector2(500, -200);
         }
         public void initialize()
         {
-            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 20, 20, 20);
-            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 46);
+            topofHead = new Rectangle((int)Position.X, (int)Position.Y - 50, 10, 20);
+            mainBody = new Rectangle((int)Position.X-30, (int)Position.Y, 100, 46);
+         
         }
         public void Update(GameTime gameTime)
         {
@@ -150,19 +152,16 @@ namespace Chapter6Game.Content.Objects
                 IsPatrolling = true;
                 Position.X -= 0.5f;
             }
+    initialize();
 
-           
-            initialize();
-           
-            //mainBody.X = (int)Position.X;
-            //mainBody.Y = (int)Position.Y;
-            //topofHead.X = (int)Position.X;
-            //topofHead.Y = (int)Position.Y;
-
+            mainBody.X = (int)Position.X;
+            mainBody.Y = (int)Position.Y;
+            topofHead.X = (int)Position.X;
+            topofHead.Y = (int)Position.Y;
             anim.Position = Position;
             anim.Update(gameTime);
             Position.Y += gravity;
-
+            
             HandleCollisions();
            
         }
@@ -210,10 +209,10 @@ namespace Chapter6Game.Content.Objects
             }
         }
     }
-
+    
     public class SamuraiBoss
     {
-        public float gravity = 2;
+       
         public Player Player = new Player();
         public bool isdead = false; 
         Terrain terrain = new Terrain();
@@ -221,23 +220,67 @@ namespace Chapter6Game.Content.Objects
         public SpriteAnimation anim;
         public Vector2 Position;
         public Rectangle mainBody, SamuraiSlash;
+       public bool walking = false;
+        public bool flip = false;
+        public bool isattacking = false;
+        
         public SamuraiBoss(GameRoot root)
         {
-
-            Position = new Vector2(875, 254);
+            Position = new Vector2(700, 230);
         }
         public void Initialize()
         {
-            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 40, 48);
-            SamuraiSlash = new Rectangle((int)Position.X - 10, (int)Position.Y, 20, 15);
+            mainBody = new Rectangle((int)Position.X, (int)Position.Y, 100, 48);
+            SamuraiSlash = new Rectangle((int)Position.X - 10, (int)Position.Y, 0, 0);
         }
         public void Update(GameTime gameTime)
         {
+            Initialize();
+            if (health != 0)
+            {
+                WalkLeftAndRight(gameTime);
+                
+                Attack(gameTime);
+            }
+           if (health <= 0)
+            {
+                isattacking = false;
+                walking = false;
+                isdead = true;
+                Position.Y += 2;
+            }
             anim.Position = Position;
-            anim.Update(gameTime);
-            Position.Y += gravity;
+            anim.Update(gameTime);  
+        }
+        public void WalkLeftAndRight(GameTime gametime)
+        {
+            float x = MathF.Cos(0.8f * (float)gametime.TotalGameTime.TotalSeconds) * 2;
+
+            Debug.WriteLine(Position);
+                Position.X -= x;
+                walking = true;
+            /// Add Sprite Flipping Logic Here
+           if (Position.X <= 685 )
+            {
+                flip = true;
+            }
+            else { flip = false; }
         }
         
+        public void Attack(GameTime gameTime)
+        {
+          float distance = Vector2.Distance(Player.position, Position);
+            Debug.WriteLine(distance);
+            if (distance <= 1400)
+            {
+                walking = false;
+                isattacking = true;
+                SamuraiSlash.Width = 30;
+                SamuraiSlash.Height = 30;
+            }
+            
+        }
+      
     }
 
 }
